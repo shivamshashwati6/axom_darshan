@@ -677,4 +677,580 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. Initial Renders
     renderWeavers();
     renderExperiences();
+
+    // ==========================================================================
+    // INTERACTIVE ROUTE PLANNER & CUSTOM ITINERARY BUILDER DATA & LOGIC
+    // ==========================================================================
+ 
+    // 1. Structured Data Models
+    const circuitsData = {
+        wildlife: {
+            name: 'The Wildlife & Conservation Circuit',
+            vibe: 'Nature & Adventure',
+            destinations: [
+                {
+                    id: 'kaziranga',
+                    title: 'Kaziranga National Park (Rhino safaris)',
+                    desc: 'Embark on dawn safaris to spot the Great Indian One-Horned Rhinoceros, wild water buffaloes, and rich birdlife in the tall elephant grass.',
+                    tips: {
+                        wildlife: 'Best time for animal crossings is early morning around 6:00 AM.',
+                        photography: 'Bring a 300mm+ telephoto lens to capture migratory birds and distant herds.'
+                    }
+                },
+                {
+                    id: 'manas',
+                    title: 'Manas National Park (Biosphere reserve)',
+                    desc: 'Explore the scenic foothills of Bhutan, home to endangered species like the Golden Langur, Pygmy Hog, and Bengal Florican.',
+                    tips: {
+                        wildlife: 'Look out for herds of wild elephants drinking at the River near the Bhutan border.',
+                        photography: 'Capturing the golden sunset silhouette over the Himalayan foothills is a must.'
+                    }
+                },
+                {
+                    id: 'dibru-saikhowa',
+                    title: 'Dibru-Saikhowa National Park (Feral horses & birdwatching)',
+                    desc: 'Cruise along the Brahmaputra channels to view feral horses, gangetic dolphins, and hundreds of vibrant native and migratory bird species.',
+                    tips: {
+                        wildlife: 'Boat safari is required; guide eyes can easily spot river dolphins near confluences.',
+                        photography: 'A polarizing filter helps cut water reflection for dolphin and bird shots.'
+                    }
+                }
+            ]
+        },
+        heritage: {
+            name: 'The Heritage & Architecture Trail',
+            vibe: 'History & Culture',
+            destinations: [
+                {
+                    id: 'charaideo',
+                    title: 'Charaideo Maidams (Ahom royal burial mounds)',
+                    desc: 'Walk among the sacred hillock burial mounds of Ahom kings and queens, often referred to as the Pyramids of Assam.',
+                    tips: {
+                        heritage: 'Hire a local historian at the entrance to understand Ahom ancestor worship.',
+                        photography: 'Wider angles work best to capture the rolling topography of the grass mounds.'
+                    }
+                },
+                {
+                    id: 'rang-ghar',
+                    title: 'Rang Ghar (Amphitheater)',
+                    desc: 'Stand before the iconic double-storied Ahom royal sports pavilion, one of the oldest amphitheaters in Asia.',
+                    tips: {
+                        heritage: 'Examine the flat brickwork made with organic lime-egg mortar (Karhal).',
+                        photography: 'Late afternoon sun highlights the warm reddish hues of the brick arches.'
+                    }
+                },
+                {
+                    id: 'talatal-ghar',
+                    title: 'Talatal Ghar (Subterranean palace tunnels in Sivasagar)',
+                    desc: 'Descend into the remains of the multi-level subterranean palace, designed as an Ahom military base with secret exit tunnels.',
+                    tips: {
+                        heritage: 'Explore the temple chambers and the underground barracks layout.',
+                        photography: 'Tripods are useful inside the dark, brick-lined corridors (where permitted).'
+                    }
+                }
+            ]
+        },
+        spiritual: {
+            name: 'The Spiritual & Mystic Route',
+            vibe: 'Pilgrimage & Mysticism',
+            destinations: [
+                {
+                    id: 'kamakhya',
+                    title: 'Kamakhya Temple (Nilachal Hills)',
+                    desc: 'Ascend the sacred Nilachal Hills to explore the revered temple of Goddess Kamakhya, the historic heart of Tantric shakti worship.',
+                    tips: {
+                        spiritual: 'Seek entry early in the morning to beat the peak pilgrim rush.',
+                        photography: 'Respect temple guidelines; photography is restricted inside the inner sanctum.'
+                    }
+                },
+                {
+                    id: 'hajo',
+                    title: 'Hajo (Confluence of three religions)',
+                    desc: 'Visit the ancient temple ruins of Hayagriva Madhava and the sacred Poa Mecca mosque, a historic meeting point of three major religions.',
+                    tips: {
+                        spiritual: 'Poa Mecca is believed to offer one-fourth (Poa) blessings of the main Mecca.',
+                        heritage: 'Look out for the rock carvings detailing historical ruler dedications.'
+                    }
+                },
+                {
+                    id: 'navagraha',
+                    title: 'Navagraha Temple (Temple of nine planets)',
+                    desc: 'Explore the historic temple of the nine planetary celestial bodies, once an ancient center for astronomical and astrological research.',
+                    tips: {
+                        spiritual: 'The temple houses nine planetary Shiva lingams representing celestial bodies.',
+                        photography: 'Panoramic views of Guwahati and the Brahmaputra are visible from this hilltop.'
+                    }
+                }
+            ]
+        }
+    };
+ 
+    const extraDestinations = [
+        {
+            id: 'majuli-island',
+            title: 'Majuli River Island (River & tea hubs)',
+            desc: 'Cross the river to visit ancient Satras, observe traditional mask makers, and watch sunset over the wetlands.',
+            tips: {
+                ethno: 'Rent a bicycle to explore Mising stilt villages and agricultural fields.',
+                photography: 'Sunset over Luit river ghats is a prime landscape photography spot.'
+            }
+        },
+        {
+            id: 'sualkuchi-village',
+            title: 'Sualkuchi Silk Village (Weavers trail)',
+            desc: 'Listen to the rhythmic sound of wooden looms and explore the weaving cooperatives producing golden Muga and white Pat silk.',
+            tips: {
+                heritage: 'Observe weavers manual shuttle-gliding techniques at family-owned workshops.',
+                ethno: 'Interact with local weavers to learn about silk dye extractions.'
+            }
+        },
+        {
+            id: 'haflong-station',
+            title: 'Haflong Hill Station (Misty valleys)',
+            desc: 'Wander through the misty hills, visit tribal villages, and enjoy the cool mountain climate of Assam\'s only hill resort.',
+            tips: {
+                wildlife: 'Spot colorful orchids in the surrounding dense evergreen forests.',
+                photography: 'Misty valley views from Jatinga overlook points offer ethereal mountain shots.'
+            }
+        },
+        {
+            id: 'tezpur-city',
+            title: 'Tezpur (City of Romance)',
+            desc: 'Visit historical parks like Agnigarh hill, archaeological ruins of Da Parbatia doorframe, and scenic riverbanks.',
+            tips: {
+                heritage: 'Ascend Agnigarh for a view of the Kolia Bhomora bridge.',
+                photography: 'Ruins of Da Parbatia house carvings of Ganga and Yamuna.'
+            }
+        }
+    ];
+ 
+    // 2. State Management Object
+    const plannerState = {
+        activeCircuit: 'wildlife',
+        arrivalPoint: 'Guwahati',
+        interests: new Set(),
+        timeline: []
+    };
+ 
+    // Initialize Default State from localStorage if available
+    function loadSavedRoute() {
+        const saved = localStorage.getItem('axom_darshan_route');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                plannerState.activeCircuit = parsed.activeCircuit || 'wildlife';
+                plannerState.arrivalPoint = parsed.arrivalPoint || 'Guwahati';
+                plannerState.interests = new Set(parsed.interests || []);
+                plannerState.timeline = parsed.timeline || [];
+                return true;
+            } catch (e) {
+                console.error('Error loading saved route:', e);
+            }
+        }
+        return false;
+    }
+ 
+    // Set Default Circuit
+    function resetToCircuit(circuitKey) {
+        plannerState.activeCircuit = circuitKey;
+        plannerState.timeline = JSON.parse(JSON.stringify(circuitsData[circuitKey].destinations));
+    }
+ 
+    // 3. Dynamic Rendering Functions
+    function renderPlanner() {
+        // Render Active Circuit Button State
+        document.querySelectorAll('.circuit-btn').forEach(btn => {
+            if (btn.getAttribute('data-circuit') === plannerState.activeCircuit) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+ 
+        // Render Arrival Point Select State
+        const arrivalSelect = document.getElementById('arrival-point');
+        if (arrivalSelect) {
+            arrivalSelect.value = plannerState.arrivalPoint;
+        }
+ 
+        // Render Interest Tags State
+        document.querySelectorAll('.interest-tag-btn').forEach(btn => {
+            const interest = btn.getAttribute('data-interest');
+            if (plannerState.interests.has(interest)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+ 
+        // Render Timeline Canvas Cards
+        const timelineWrapper = document.getElementById('planner-timeline');
+        const daysCountSpan = document.getElementById('timeline-days-count');
+        if (!timelineWrapper) return;
+        
+        timelineWrapper.innerHTML = '';
+        
+        // Trigger a smooth premium transition animation using the custom keyframe class
+        timelineWrapper.classList.remove('fade-in-up');
+        void timelineWrapper.offsetWidth; // Force Reflow
+        timelineWrapper.classList.add('fade-in-up');
+        
+        if (plannerState.timeline.length === 0) {
+            timelineWrapper.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fas fa-route" style="font-size: 2rem; margin-bottom: 10px; color: var(--accent); opacity: 0.5;"></i>
+                    <p>No days in the itinerary. Please select a circuit or add a destination below.</p>
+                </div>
+            `;
+            if (daysCountSpan) daysCountSpan.innerText = '0 Days';
+            return;
+        }
+ 
+        if (daysCountSpan) {
+            daysCountSpan.innerText = `${plannerState.timeline.length} Day${plannerState.timeline.length > 1 ? 's' : ''}`;
+        }
+ 
+        plannerState.timeline.forEach((dest, index) => {
+            // Find active interest tips matching the selected interest tags
+            let tipsHtml = '';
+            if (dest.tips) {
+                Object.keys(dest.tips).forEach(interestKey => {
+                    if (plannerState.interests.has(interestKey)) {
+                        tipsHtml += `
+                            <div style="margin-top: 10px; font-size: 0.78rem; background: rgba(214, 175, 55, 0.08); border-left: 2px solid var(--accent); padding: 5px 10px; border-radius: 2px; color: var(--accent);">
+                                <i class="fas fa-star" style="margin-right: 5px;"></i><strong>${interestKey.charAt(0).toUpperCase() + interestKey.slice(1)} Tip:</strong> ${dest.tips[interestKey]}
+                            </div>
+                        `;
+                    }
+                });
+            }
+ 
+            const upDisabled = index === 0 ? 'style="opacity: 0.2; pointer-events: none;"' : '';
+            const downDisabled = index === plannerState.timeline.length - 1 ? 'style="opacity: 0.2; pointer-events: none;"' : '';
+ 
+            const itemHtml = `
+                <div class="planner-timeline-item" data-index="${index}" draggable="true">
+                    <div class="planner-timeline-dot"></div>
+                    <div class="planner-timeline-card">
+                        <div style="flex-grow: 1;">
+                            <span class="planner-day-num">Day ${index + 1}</span>
+                            <h4 class="planner-dest-title">${dest.title}</h4>
+                            <p class="planner-dest-desc">${dest.desc}</p>
+                            ${tipsHtml}
+                        </div>
+                        <div class="planner-card-actions">
+                            <button class="planner-action-btn move-up-btn" data-index="${index}" title="Move Up" ${upDisabled}>
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button class="planner-action-btn move-down-btn" data-index="${index}" title="Move Down" ${downDisabled}>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <button class="planner-action-btn delete-dest-btn" data-index="${index}" title="Remove Day">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            timelineWrapper.innerHTML += itemHtml;
+        });
+ 
+        // Update Extra Destination Select Dropdown
+        const selectElement = document.getElementById('add-dest-select');
+        if (selectElement) {
+            selectElement.innerHTML = '<option value="">-- Choose a Destination to Add --</option>';
+            extraDestinations.forEach(dest => {
+                // Only show in dropdown if not already in the timeline
+                const exists = plannerState.timeline.some(d => d.id === dest.id);
+                if (!exists) {
+                    selectElement.innerHTML += `<option value="${dest.id}">${dest.title}</option>`;
+                }
+            });
+        }
+ 
+        // Attach Timeline Event Listeners and Drag-and-Drop operations
+        attachTimelineActions();
+    }
+ 
+    // 4. Attach Listeners for Card Operations and Drag-and-Drop
+    function attachTimelineActions() {
+        // Move Up button
+        document.querySelectorAll('.move-up-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = parseInt(this.getAttribute('data-index'));
+                if (idx > 0) {
+                    const temp = plannerState.timeline[idx];
+                    plannerState.timeline[idx] = plannerState.timeline[idx - 1];
+                    plannerState.timeline[idx - 1] = temp;
+                    renderPlanner();
+                    showToast(`Moved day up.`);
+                }
+            };
+        });
+ 
+        // Move Down button
+        document.querySelectorAll('.move-down-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = parseInt(this.getAttribute('data-index'));
+                if (idx < plannerState.timeline.length - 1) {
+                    const temp = plannerState.timeline[idx];
+                    plannerState.timeline[idx] = plannerState.timeline[idx + 1];
+                    plannerState.timeline[idx + 1] = temp;
+                    renderPlanner();
+                    showToast(`Moved day down.`);
+                }
+            };
+        });
+ 
+        // Delete Day button
+        document.querySelectorAll('.delete-dest-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = parseInt(this.getAttribute('data-index'));
+                const removedTitle = plannerState.timeline[idx].title;
+                plannerState.timeline.splice(idx, 1);
+                renderPlanner();
+                showToast(`Removed ${removedTitle} from itinerary.`);
+            };
+        });
+
+        // HTML5 Drag and Drop Handlers
+        const timelineItems = document.querySelectorAll('.planner-timeline-item');
+        let draggedIndex = null;
+
+        timelineItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedIndex = parseInt(this.getAttribute('data-index'));
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', draggedIndex);
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                const hoverIndex = parseInt(this.getAttribute('data-index'));
+                if (hoverIndex !== draggedIndex) {
+                    this.classList.add('drag-over');
+                }
+            });
+
+            item.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+
+            item.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const targetIndex = parseInt(this.getAttribute('data-index'));
+
+                if (!isNaN(sourceIndex) && sourceIndex !== targetIndex) {
+                    // Reorder local state array
+                    const draggedItem = plannerState.timeline[sourceIndex];
+                    plannerState.timeline.splice(sourceIndex, 1);
+                    plannerState.timeline.splice(targetIndex, 0, draggedItem);
+                    
+                    renderPlanner();
+                    showToast(`Reordered itinerary to Day ${targetIndex + 1}`);
+                }
+            });
+
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                timelineItems.forEach(i => i.classList.remove('drag-over'));
+            });
+        });
+    }
+ 
+    // 5. Setup Action Listeners
+    // Circuit Selectors
+    document.querySelectorAll('.circuit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const circuit = this.getAttribute('data-circuit');
+            resetToCircuit(circuit);
+            renderPlanner();
+            showToast(`Loaded ${circuitsData[circuit].name}`);
+        });
+    });
+ 
+    // Arrival Point Change
+    const arrivalSelect = document.getElementById('arrival-point');
+    if (arrivalSelect) {
+        arrivalSelect.addEventListener('change', function() {
+            plannerState.arrivalPoint = this.value;
+            showToast(`Arrival point set to ${this.value}`);
+        });
+    }
+ 
+    // Interest Tags Multi-Select Toggle
+    document.querySelectorAll('.interest-tag-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const interest = this.getAttribute('data-interest');
+            if (plannerState.interests.has(interest)) {
+                plannerState.interests.delete(interest);
+                showToast(`Removed ${interest} filter.`);
+            } else {
+                plannerState.interests.add(interest);
+                showToast(`Added ${interest} tip filter.`);
+            }
+            renderPlanner();
+        });
+    });
+ 
+    // Add Destination Button
+    const addDestBtn = document.getElementById('add-dest-btn');
+    const addDestSelect = document.getElementById('add-dest-select');
+    if (addDestBtn && addDestSelect) {
+        addDestBtn.onclick = function() {
+            const destId = addDestSelect.value;
+            if (!destId) return;
+ 
+            const destObj = extraDestinations.find(d => d.id === destId);
+            if (destObj) {
+                plannerState.timeline.push(JSON.parse(JSON.stringify(destObj)));
+                renderPlanner();
+                showToast(`Added ${destObj.title} to Day ${plannerState.timeline.length}.`);
+            }
+        };
+    }
+ 
+    // Save Route Button (LocalStorage)
+    const saveRouteBtn = document.getElementById('save-route-btn');
+    if (saveRouteBtn) {
+        saveRouteBtn.onclick = function() {
+            const dataToSave = {
+                activeCircuit: plannerState.activeCircuit,
+                arrivalPoint: plannerState.arrivalPoint,
+                interests: Array.from(plannerState.interests),
+                timeline: plannerState.timeline
+            };
+            localStorage.setItem('axom_darshan_route', JSON.stringify(dataToSave));
+            showToast('Route itinerary saved successfully!');
+        };
+    }
+ 
+    // Compile & Download Itinerary File as PDF (html2pdf integration)
+    const downloadItineraryBtn = document.getElementById('download-itinerary-btn');
+    if (downloadItineraryBtn) {
+        downloadItineraryBtn.onclick = function() {
+            if (plannerState.timeline.length === 0) {
+                showToast('Your itinerary is empty. Please add destinations first.');
+                return;
+            }
+ 
+            showToast('Generating premium PDF itinerary...');
+ 
+            // Create a temporary element to render the itinerary beautifully
+            const element = document.createElement('div');
+            element.style.width = '700px';
+            element.style.padding = '40px';
+            element.style.backgroundColor = '#0a0f0d'; // Deep dark forest green theme
+            element.style.color = '#f8f9fa';
+            element.style.fontFamily = "'Montserrat', sans-serif";
+            element.style.boxSizing = 'border-box';
+ 
+            const interestsArray = Array.from(plannerState.interests);
+            const interestsText = interestsArray.length > 0 ? interestsArray.map(i => i.charAt(0).toUpperCase() + i.slice(1)).join(', ') : 'None selected';
+ 
+            let daysHtml = '';
+            plannerState.timeline.forEach((dest, idx) => {
+                let tipsHtml = '';
+                if (dest.tips) {
+                    Object.keys(dest.tips).forEach(interestKey => {
+                        if (plannerState.interests.has(interestKey)) {
+                            tipsHtml += `
+                                <div style="margin-top: 12px; font-size: 13px; background-color: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 8px 12px; border-radius: 4px; color: #d4af37;">
+                                    <strong style="text-transform: uppercase;">${interestKey} Tip:</strong> ${dest.tips[interestKey]}
+                                </div>
+                            `;
+                        }
+                    });
+                }
+ 
+                daysHtml += `
+                    <div style="margin-bottom: 30px; position: relative; border-left: 2px solid #d4af37; padding-left: 25px; margin-left: 10px;">
+                        <div style="position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #d4af37; box-shadow: 0 0 8px #d4af37;"></div>
+                        <span style="font-size: 11px; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: 1px;">Day ${idx + 1}</span>
+                        <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #ffffff; margin: 4px 0 8px 0; font-weight: 700;">${dest.title}</h3>
+                        <p style="font-size: 14px; color: #ced4da; line-height: 1.6; margin: 0;">${dest.desc}</p>
+                        ${tipsHtml}
+                    </div>
+                `;
+            });
+ 
+            element.innerHTML = `
+                <!-- Header -->
+                <div style="border-bottom: 2px solid #d4af37; padding-bottom: 25px; margin-bottom: 35px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1 style="font-family: 'Playfair Display', serif; font-size: 32px; color: #d4af37; margin: 0; font-weight: 700; letter-spacing: 1px;">AXOM DARSHAN</h1>
+                        <span style="font-size: 12px; color: #ced4da; text-transform: uppercase; letter-spacing: 2px;">Explore the Uncharted Soul of Assam</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 12px; color: #d4af37; font-weight: 600;">Custom Travel Itinerary</span>
+                    </div>
+                </div>
+ 
+                <!-- Metadata details -->
+                <div style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 20px; margin-bottom: 35px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <div style="font-size: 11px; color: #ced4da; text-transform: uppercase; letter-spacing: 0.5px;">Base Selected Circuit</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-top: 3px;">${circuitsData[plannerState.activeCircuit]?.name || 'Custom Circuit'}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #ced4da; text-transform: uppercase; letter-spacing: 0.5px;">Arrival Point</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-top: 3px;">${plannerState.arrivalPoint}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #ced4da; text-transform: uppercase; letter-spacing: 0.5px;">Specialized Interests</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-top: 3px;">${interestsText}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #ced4da; text-transform: uppercase; letter-spacing: 0.5px;">Total Duration</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #d4af37; margin-top: 3px;">${plannerState.timeline.length} Days</div>
+                    </div>
+                </div>
+ 
+                <!-- Daily Route Plan -->
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 22px; color: #ffffff; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; margin-bottom: 25px; font-weight: 700;">Daily Route Plan</h2>
+                <div style="padding-bottom: 20px;">
+                    ${daysHtml}
+                </div>
+ 
+                <!-- Footer -->
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 20px; margin-top: 40px; text-align: center; font-size: 12px; color: #ced4da;">
+                    <p style="margin: 0 0 5px 0;">Generated on ${new Date().toLocaleDateString()} | Ready for Assam!</p>
+                    <p style="margin: 0; color: #d4af37;">Book your curated experiences today at <span style="font-weight: 600;">explore@axomdarshan.in</span></p>
+                </div>
+            `;
+ 
+            // Append to body temporarily so html2pdf can render it
+            document.body.appendChild(element);
+ 
+            const opt = {
+                margin:       0.4,
+                filename:     `axom-darshan-itinerary-${plannerState.activeCircuit}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0a0f0d' },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+ 
+            // Generate PDF and trigger download
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.removeChild(element);
+                showToast('Premium PDF Itinerary Downloaded!');
+            }).catch(err => {
+                console.error('PDF generation error:', err);
+                if (element.parentNode) {
+                    document.body.removeChild(element);
+                }
+                showToast('Failed to generate PDF. Please try again.');
+            });
+        };
+    }
+ 
+    // 11. Initial State Initialization
+    const loaded = loadSavedRoute();
+    if (!loaded) {
+        resetToCircuit('wildlife');
+    }
+    renderPlanner();
 });

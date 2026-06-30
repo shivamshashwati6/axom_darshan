@@ -21,6 +21,7 @@
             <li><a href="#offbeat">Offbeat</a></li>
             <li><a href="#calendar">Calendar</a></li>
             <li><a href="#artisans">Artisans</a></li>
+            <li><a href="#route-planner">Planner</a></li>
             <li><a href="#itinerary">Itinerary</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -221,6 +222,111 @@
         </div>
     </div>
 
+    <section id="route-planner" class="glass">
+        <div class="section-header">
+            <h2>Interactive Route Planner</h2>
+            <p>Select a preset circuit, configure your arrival point and interests, and customize your custom day-by-day itinerary.</p>
+        </div>
+
+        <div class="planner-dashboard">
+            <!-- Left Column: Control Panel -->
+            <div class="control-panel glass">
+                <h3 class="panel-title"><i class="fas fa-sliders-h"></i> Configuration</h3>
+                
+                <!-- Theme-Based Circuits -->
+                <div class="control-group">
+                    <label class="control-label">Select Base Circuit</label>
+                    <div class="circuit-selectors">
+                        <button class="circuit-btn active" data-circuit="wildlife">
+                            <i class="fas fa-leaf"></i>
+                            <div class="circuit-meta">
+                                <span class="circuit-name">Wildlife & Conservation</span>
+                                <span class="circuit-vibe">Nature & Adventure</span>
+                            </div>
+                        </button>
+                        <button class="circuit-btn" data-circuit="heritage">
+                            <i class="fas fa-history"></i>
+                            <div class="circuit-meta">
+                                <span class="circuit-name">Heritage & Architecture</span>
+                                <span class="circuit-vibe">History & Culture</span>
+                            </div>
+                        </button>
+                        <button class="circuit-btn" data-circuit="spiritual">
+                            <i class="fas fa-om"></i>
+                            <div class="circuit-meta">
+                                <span class="circuit-name">Spiritual & Mystic Route</span>
+                                <span class="circuit-vibe">Pilgrimage & Mysticism</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Arrival Point -->
+                <div class="control-group">
+                    <label for="arrival-point" class="control-label">Arrival Point</label>
+                    <select id="arrival-point" class="custom-select" style="width: 100%;">
+                        <option value="Guwahati">Guwahati (Lokpriya Gopinath Bordoloi Airport)</option>
+                        <option value="Dibrugarh">Dibrugarh (Mohanbari Airport)</option>
+                        <option value="Tezpur">Tezpur (Salonibari Airport)</option>
+                    </select>
+                </div>
+
+                <!-- Interest Tags Multi-Select -->
+                <div class="control-group">
+                    <label class="control-label">Specialized Interests</label>
+                    <div class="interest-tags">
+                        <button class="interest-tag-btn" data-interest="wildlife"><i class="fas fa-binoculars"></i> Wildlife</button>
+                        <button class="interest-tag-btn" data-interest="photography"><i class="fas fa-camera"></i> Photography</button>
+                        <button class="interest-tag-btn" data-interest="heritage"><i class="fas fa-monument"></i> Heritage</button>
+                        <button class="interest-tag-btn" data-interest="spiritual"><i class="fas fa-place-of-worship"></i> Spiritual</button>
+                        <button class="interest-tag-btn" data-interest="ethno"><i class="fas fa-users"></i> Ethno-Tourism</button>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="control-actions">
+                    <button id="save-route-btn" class="btn btn-secondary" style="width: 100%; border: 1px solid var(--accent); color: var(--accent); background: transparent; padding: 0.8rem 1.5rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: var(--transition);">
+                        <i class="fas fa-save"></i> Save Route Locally
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Timeline Canvas -->
+            <div class="timeline-canvas glass">
+                <div class="canvas-header">
+                    <h3 class="panel-title"><i class="fas fa-route"></i> Custom Itinerary Builder</h3>
+                    <span class="timeline-counter" id="timeline-days-count">3 Days</span>
+                </div>
+
+                <!-- The Vertical Timeline -->
+                <div id="planner-timeline" class="planner-timeline-wrapper">
+                    <!-- Dynamically populated via JS -->
+                </div>
+
+                <!-- Add Destination Group -->
+                <div class="add-destination-wrap">
+                    <label for="add-dest-select" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Add Destination</label>
+                    <div class="add-destination-control" style="display: flex; gap: 15px;">
+                        <select id="add-dest-select" class="custom-select" style="flex-grow: 1;">
+                            <option value="">-- Choose a Destination to Add --</option>
+                            <!-- Dynamically populated via JS -->
+                        </select>
+                        <button id="add-dest-btn" class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.85rem; border-radius: 25px;">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generate & Download CTA -->
+                <div class="canvas-actions" style="margin-top: 30px;">
+                    <button id="download-itinerary-btn" class="btn btn-primary" style="width: 100%; padding: 1rem; border-radius: 30px;">
+                        <i class="fas fa-file-download"></i> Generate & Download Itinerary
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="itinerary">
         <div class="section-header">
             <h2>Assam in 7 Days</h2>
@@ -343,6 +449,8 @@
         </div>
     </footer>
 
+    <!-- html2pdf library for premium PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
