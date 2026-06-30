@@ -14,12 +14,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
+            const href = this.getAttribute('href');
+            if (href === '#') {
                 window.scrollTo({
-                    top: target.offsetTop - 80,
+                    top: 0,
                     behavior: 'smooth'
                 });
+                return;
+            }
+            try {
+                const target = document.querySelector(href);
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            } catch (err) {
+                console.warn('Safe query selector error handled for:', href);
             }
         });
     });
@@ -1253,4 +1265,374 @@ document.addEventListener('DOMContentLoaded', () => {
         resetToCircuit('wildlife');
     }
     renderPlanner();
+ 
+    // ==========================================================================
+    // IMMERSIVE MEDIA & UI ENHANCEMENTS IMPLEMENTATION
+    // ==========================================================================
+ 
+    // 1. Ambient Soundscapes Configuration Data
+    const soundscapeTracks = [
+        {
+            id: 'river-dawn',
+            title: 'Brahmaputra River Dawn',
+            desc: 'Ambient river waves & morning birds',
+            url: 'https://assets.mixkit.co/active_storage/sfx/1188/1188-84.wav'
+        },
+        {
+            id: 'valley-rhythms',
+            title: 'Rhythms of the Valley',
+            desc: 'Acoustic melodies & Gogona backdrop',
+            url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        },
+        {
+            id: 'rainforest',
+            title: 'Rainforest Symphony',
+            desc: 'Rain canopy sounds of Upper Assam',
+            url: 'https://assets.mixkit.co/active_storage/sfx/2433/2433-84.wav'
+        }
+    ];
+ 
+    // Soundscape DOM Controls
+    const widget = document.getElementById('ambient-soundscape-widget');
+    const toggleBtn = document.getElementById('soundscape-toggle-btn');
+    const audio = document.getElementById('soundscape-audio');
+    const playPauseBtn = document.getElementById('play-pause-sound-btn');
+    const volumeSlider = document.getElementById('soundscape-volume');
+    const equalizer = document.getElementById('audio-equalizer');
+    const trackListContainer = widget ? widget.querySelector('.track-menu-list') : null;
+    const pulseDot = widget ? widget.querySelector('.unmute-pulse-dot') : null;
+ 
+    let activeTrackId = soundscapeTracks[0].id;
+    let audioInitialized = false;
+ 
+    // Render Audio Tracks Menu
+    if (trackListContainer) {
+        soundscapeTracks.forEach((track, idx) => {
+            const trackItem = document.createElement('div');
+            trackItem.className = `track-item ${idx === 0 ? 'active' : ''}`;
+            trackItem.setAttribute('data-track', track.id);
+            trackItem.innerHTML = `
+                <div class="track-item-info">
+                    <span class="track-item-title ${idx === 0 ? 'track-item-title-active' : ''}">${track.title}</span>
+                    <span class="track-item-desc">${track.desc}</span>
+                </div>
+                <div class="track-play-indicator">
+                    <i class="${idx === 0 ? 'fas fa-volume-up' : 'far fa-play-circle'}"></i>
+                </div>
+            `;
+            
+            trackItem.addEventListener('click', () => {
+                switchTrack(track.id);
+            });
+            trackListContainer.appendChild(trackItem);
+        });
+    }
+ 
+    // Initialize Audio Source
+    if (audio) {
+        audio.src = soundscapeTracks[0].url;
+        audio.volume = volumeSlider ? volumeSlider.value : 0.5;
+    }
+ 
+    // Toggle Widget Menu Expand/Collapse
+    if (toggleBtn && widget) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (widget.classList.contains('closed')) {
+                widget.classList.remove('closed');
+                widget.classList.add('open');
+            } else {
+                widget.classList.remove('open');
+                widget.classList.add('closed');
+            }
+        });
+        
+        // Prevent closing when clicking inside content
+        widget.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        
+        // Close widget when clicking elsewhere
+        window.addEventListener('click', () => {
+            if (widget.classList.contains('open')) {
+                widget.classList.remove('open');
+                widget.classList.add('closed');
+            }
+        });
+    }
+ 
+    // Play/Pause Action
+    if (playPauseBtn && audio) {
+        playPauseBtn.addEventListener('click', () => {
+            if (!audioInitialized) {
+                audioInitialized = true;
+                if (pulseDot) pulseDot.remove();
+            }
+ 
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    equalizer.classList.add('playing');
+                }).catch(err => {
+                    console.error('Audio play failed:', err);
+                });
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                equalizer.classList.remove('playing');
+            }
+        });
+    }
+ 
+    // Volume Control
+    if (volumeSlider && audio) {
+        volumeSlider.addEventListener('input', () => {
+            audio.volume = volumeSlider.value;
+        });
+    }
+ 
+    // Switch Track function
+    function switchTrack(trackId) {
+        const track = soundscapeTracks.find(t => t.id === trackId);
+        if (!track || !audio) return;
+        
+        activeTrackId = trackId;
+        audioInitialized = true;
+        
+        if (pulseDot) pulseDot.remove();
+ 
+        document.querySelectorAll('.track-item').forEach(item => {
+            const isCurrent = item.getAttribute('data-track') === trackId;
+            item.className = `track-item ${isCurrent ? 'active' : ''}`;
+            
+            const titleSpan = item.querySelector('.track-item-title');
+            if (titleSpan) {
+                if (isCurrent) titleSpan.classList.add('track-item-title-active');
+                else titleSpan.classList.remove('track-item-title-active');
+            }
+            
+            const icon = item.querySelector('.track-play-indicator i');
+            if (icon) {
+                icon.className = isCurrent ? 'fas fa-volume-up' : 'far fa-play-circle';
+            }
+        });
+ 
+        audio.src = track.url;
+        audio.load();
+        audio.play().then(() => {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            equalizer.classList.add('playing');
+        }).catch(err => {
+            console.error('Audio switch playback failed:', err);
+        });
+    }
+ 
+    // 2. Virtual 360° Walkthroughs Viewer
+    const vrPanoramas = {
+        monuments: 'https://images.unsplash.com/photo-1590001155093-a3c66ab0c3ff?auto=format&fit=crop&w=2500&q=80',
+        teaestate: 'https://images.unsplash.com/photo-1557956976-1a84f331cf54?auto=format&fit=crop&w=2500&q=80'
+    };
+ 
+    const panoramaViewer = document.getElementById('panorama-viewer');
+    const panoramaImg = document.getElementById('panorama-img');
+    const vrTabBtns = document.querySelectorAll('.vr-tab-btn');
+ 
+    let isDragging = false;
+    let startX = 0;
+    let currentX = -150; // default panning offset to keep image centered initially
+    let autoPanInterval = null;
+    let autoPanSpeed = 0.4;
+ 
+    // Tab switching for 360° Walkthroughs
+    vrTabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            vrTabBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const vrKey = this.getAttribute('data-vr');
+            if (panoramaImg && vrPanoramas[vrKey]) {
+                panoramaImg.style.opacity = '0';
+                setTimeout(() => {
+                    panoramaImg.src = vrPanoramas[vrKey];
+                    currentX = -150;
+                    panoramaImg.style.left = currentX + 'px';
+                    panoramaImg.style.opacity = '1';
+                }, 300);
+            }
+        });
+    });
+ 
+    if (panoramaViewer && panoramaImg) {
+        // Set Initial Image
+        panoramaImg.src = vrPanoramas.monuments;
+        panoramaImg.style.left = currentX + 'px';
+        panoramaImg.style.transition = 'opacity 0.3s ease';
+ 
+        // Dragging Event Handlers
+        panoramaViewer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - currentX;
+            panoramaViewer.style.cursor = 'grabbing';
+        });
+ 
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                panoramaViewer.style.cursor = 'grab';
+            }
+        });
+ 
+        panoramaViewer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+ 
+            const viewerWidth = panoramaViewer.offsetWidth;
+            const imgWidth = panoramaImg.offsetWidth;
+            const minLeft = viewerWidth - imgWidth;
+ 
+            let x = e.pageX - startX;
+            if (x > 0) x = 0;
+            if (x < minLeft) x = minLeft;
+ 
+            currentX = x;
+            panoramaImg.style.left = currentX + 'px';
+        });
+ 
+        // Touch Drag Handlers
+        panoramaViewer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX - currentX;
+        }, { passive: true });
+ 
+        panoramaViewer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const viewerWidth = panoramaViewer.offsetWidth;
+            const imgWidth = panoramaImg.offsetWidth;
+            const minLeft = viewerWidth - imgWidth;
+ 
+            let x = e.touches[0].pageX - startX;
+            if (x > 0) x = 0;
+            if (x < minLeft) x = minLeft;
+ 
+            currentX = x;
+            panoramaImg.style.left = currentX + 'px';
+        }, { passive: true });
+ 
+        panoramaViewer.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+ 
+        // Auto-panning animation loop (pans gently when not dragging)
+        function startAutoPan() {
+            function panStep() {
+                if (!isDragging && panoramaImg.offsetWidth > 0) {
+                    const imgWidth = panoramaImg.offsetWidth;
+                    const viewerWidth = panoramaViewer.offsetWidth;
+                    const minLeft = viewerWidth - imgWidth;
+ 
+                    currentX -= autoPanSpeed;
+                    if (currentX <= minLeft) {
+                        currentX = 0;
+                    }
+                    panoramaImg.style.left = currentX + 'px';
+                }
+                autoPanInterval = requestAnimationFrame(panStep);
+            }
+            autoPanInterval = requestAnimationFrame(panStep);
+        }
+ 
+        // Start auto-pan when image finishes loading
+        panoramaImg.addEventListener('load', () => {
+            if (!autoPanInterval) {
+                startAutoPan();
+            }
+        });
+    }
+ 
+    // 3. Interactive Map Coordinates & Node Popups
+    const mapNodesData = {
+        guwahati: {
+            title: 'Guwahati Gateway',
+            subtitle: 'Gateway Heritage & Mystic Tour Packages',
+            desc: 'Explore the gateway to the North-East. Blessings at Kamakhya Temple, Brahmaputra sunset luxury cruises, and trails to Hajo. Features 3-Day & 5-Day spiritual and cultural packages.',
+            actionText: 'Load Spiritual Route',
+            circuitId: 'spiritual'
+        },
+        kaziranga: {
+            title: 'Kaziranga Wilds',
+            subtitle: 'Active Wildlife Safari Circuits',
+            desc: 'Venture into the plains of the one-horned rhino. Early morning elephant rides, jeep safaris, orchid park walks, and stays in luxury forest eco-lodges. Features 4-Day adventure packages.',
+            actionText: 'Load Wildlife Route',
+            circuitId: 'wildlife'
+        },
+        majuli: {
+            title: 'Majuli & Sivasagar Cultural Hub',
+            subtitle: 'Artisan Trails & Ahom Architecture Itineraries',
+            desc: 'Cross the river to the world\'s largest river island. Witness mask makers at Samaguri Satra, Mirizim weaving clusters, and explore Ahom royal structures at Rang Ghar and Talatal Ghar.',
+            actionText: 'Load Heritage Route',
+            circuitId: 'heritage'
+        }
+    };
+ 
+    const mapPopup = document.getElementById('map-info-popup');
+    const popupClose = document.getElementById('popup-close');
+    const mapMarkers = document.querySelectorAll('.map-node-marker');
+ 
+    if (mapPopup && popupClose) {
+        popupClose.addEventListener('click', () => {
+            mapPopup.classList.add('hidden');
+        });
+ 
+        mapMarkers.forEach(marker => {
+            marker.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const nodeKey = this.getAttribute('data-node');
+                const nodeData = mapNodesData[nodeKey];
+                
+                if (nodeData) {
+                    const popupContent = mapPopup.querySelector('.popup-content');
+                    popupContent.innerHTML = `
+                        <h4>${nodeData.title}</h4>
+                        <span style="font-size: 0.72rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">${nodeData.subtitle}</span>
+                        <p>${nodeData.desc}</p>
+                        <button class="btn btn-primary popup-package-btn" id="popup-load-route-btn" data-circuit="${nodeData.circuitId}">
+                            ${nodeData.actionText}
+                        </button>
+                    `;
+ 
+                    // Open popup
+                    mapPopup.classList.remove('hidden');
+ 
+                    // Add listener to the Load Route button inside the popup
+                    const loadRouteBtn = document.getElementById('popup-load-route-btn');
+                    if (loadRouteBtn) {
+                        loadRouteBtn.addEventListener('click', function() {
+                            const circuit = this.getAttribute('data-circuit');
+                            resetToCircuit(circuit);
+                            renderPlanner();
+                            showToast(`Loaded ${circuitsData[circuit].name}`);
+                            
+                            // Scroll down to the Route Planner section smoothly
+                            const plannerSection = document.getElementById('route-planner');
+                            if (plannerSection) {
+                                window.scrollTo({
+                                    top: plannerSection.offsetTop - 80,
+                                    behavior: 'smooth'
+                                });
+                            }
+                            mapPopup.classList.add('hidden');
+                        });
+                    }
+                }
+            });
+        });
+ 
+        // Close popup when clicking on the map wrapper elsewhere
+        const mapCanvas = document.querySelector('.map-canvas-wrapper');
+        if (mapCanvas) {
+            mapCanvas.addEventListener('click', () => {
+                mapPopup.classList.add('hidden');
+            });
+        }
+    }
 });
