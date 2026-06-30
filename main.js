@@ -1635,4 +1635,233 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // ==========================================================================
+    // SUSTAINABLE & RESPONSIBLE TOURISM GUIDELINES IMPLEMENTATION
+    // ==========================================================================
+
+    // 1. Structured Data Models
+    const ecoPartnersData = [
+        {
+            name: "Majuli Organic Homestay Co-op",
+            type: "accommodation",
+            badges: [
+                { name: "100% Locally Sourced", desc: "All materials, ingredients, and staff are sourced within the local village cluster." },
+                { name: "Zero Single-Use Plastic", desc: "Completely plastic-free stays; steel bottles and bamboo containers provided." }
+            ],
+            description: "Traditional stilt houses utilizing solar energy and serving organic, farm-to-table tribal meals."
+        },
+        {
+            name: "Dihing Wildlife Eco-Tours",
+            type: "operator",
+            badges: [
+                { name: "Carbon-Offset", desc: "A portion of tour costs funds local reforestation projects in the Dihing Patkai region." },
+                { name: "Certified Naturalist Guide", desc: "Tours led by certified local wildlife conservationists and tribal trackers." }
+            ],
+            description: "Low-impact, small-group walking tours specializing in birdwatching and rainforest conservation education."
+        },
+        {
+            name: "Sualkuchi Fair-Trade Loom Alliance",
+            type: "artisan",
+            badges: [
+                { name: "Ethical Wages", desc: "Ensures weavers receive direct fair profit share, above middleman rates." },
+                { name: "Eco-Dyes Only", desc: "Utilizes organic, non-chemical herbal dyes for traditional silk weaving." }
+            ],
+            description: "A cooperative ensuring full financial transparency and utilizing organic, non-chemical dyes for traditional silk weaving."
+        }
+    ];
+
+    const etiquetteGuideData = {
+        tribal: [
+            {
+                title: "Seek Photography Permission",
+                text: "Always seek permission before photographing individuals, sacred community altars, or private weaving spaces. Respect the personal space of village communities."
+            },
+            {
+                title: "Dress and Footwear Guidelines",
+                text: "Dress modestly when visiting community villages or traditional Satras. Remove footwear where indicated before entering temples, prayer rooms, or satradhikars."
+            }
+        ],
+        wildlife: [
+            {
+                title: "Maintain Safari Quiet",
+                text: "Maintain absolute silence during jeep and elephant safaris in Kaziranga or Manas. Loud noises and bright colors distress the wild water buffaloes, tigers, and rhinos."
+            },
+            {
+                title: "Carry Out Your Litter",
+                text: "Zero-tolerance littering policy in national parks. Carry all non-biodegradable waste (plastics, wraps, cans) back to your hotel or urban hubs for proper disposal."
+            }
+        ],
+        economy: [
+            {
+                title: "Direct Craft Purchases",
+                text: "Buy textiles, handlooms, and bamboo crafts directly from village weavers, artisans, or certified local cooperatives to ensure full financial returns to creator families."
+            },
+            {
+                title: "Honoring Artisanal Value",
+                text: "Avoid aggressive bargaining on handmade items like Muga silk or hand-carved masks. These crafts require painstaking efforts and take weeks to complete."
+            }
+        ]
+    };
+
+    // State Variables
+    let currentPartnerFilter = 'all';
+    let currentEtiquetteTab = 'tribal';
+
+    // DOM Selectors
+    const partnersContainer = document.getElementById('partners-container');
+    const etiquetteContainer = document.getElementById('etiquette-tips-container');
+    const filterButtons = document.querySelectorAll('#sustainability .filter-btn');
+    const etiquetteTabButtons = document.querySelectorAll('#sustainability .etiquette-tab-btn');
+    const applyBadgeBtn = document.getElementById('apply-badge-btn');
+
+    // 2. Render Green Directory
+    function renderEcoDirectory() {
+        if (!partnersContainer) return;
+        partnersContainer.innerHTML = '';
+
+        const filtered = ecoPartnersData.filter(partner => {
+            return currentPartnerFilter === 'all' || partner.type === currentPartnerFilter;
+        });
+
+        filtered.forEach(partner => {
+            let badgesHtml = '';
+            partner.badges.forEach(badge => {
+                badgesHtml += `
+                    <span class="eco-badge" data-tooltip="${badge.desc}">
+                        <i class="fas fa-check-circle"></i> ${badge.name}
+                    </span>
+                `;
+            });
+
+            const partnerTypeLabel = partner.type === 'accommodation' ? 'Accommodation' :
+                                     partner.type === 'operator' ? 'Tour Operator' : 'Artisan Initiative';
+
+            const cardHtml = `
+                <div class="partner-card">
+                    <div class="partner-header">
+                        <h4 class="partner-name">${partner.name}</h4>
+                        <span class="partner-type">${partnerTypeLabel}</span>
+                    </div>
+                    <p class="partner-description">${partner.description}</p>
+                    <div class="partner-badges">
+                        ${badgesHtml}
+                    </div>
+                </div>
+            `;
+            partnersContainer.innerHTML += cardHtml;
+        });
+    }
+
+    // 3. Render Etiquette Guide
+    function renderEtiquetteGuide() {
+        if (!etiquetteContainer) return;
+        etiquetteContainer.innerHTML = '';
+
+        const tips = etiquetteGuideData[currentEtiquetteTab];
+        if (!tips) return;
+
+        tips.forEach((tip, idx) => {
+            const cardHtml = `
+                <div class="etiquette-card ${idx === 0 ? 'active' : ''}">
+                    <button class="accordion-header" data-index="${idx}">
+                        <span class="accordion-header-title">
+                            <i class="fas fa-arrow-circle-right"></i> ${tip.title}
+                        </span>
+                        <i class="fas fa-chevron-down accordion-caret"></i>
+                    </button>
+                    <div class="accordion-body" style="${idx === 0 ? 'max-height: 200px; opacity: 1;' : ''}">
+                        <div class="accordion-body-content">
+                            <p>${tip.text}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            etiquetteContainer.innerHTML += cardHtml;
+        });
+
+        // Attach Accordion Click Listeners
+        attachAccordionListeners();
+    }
+
+    // 4. Attach Accordion Click Listeners
+    function attachAccordionListeners() {
+        const accordions = document.querySelectorAll('.etiquette-card');
+        accordions.forEach(card => {
+            const header = card.querySelector('.accordion-header');
+            const body = card.querySelector('.accordion-body');
+            
+            header.addEventListener('click', () => {
+                const isActive = card.classList.contains('active');
+
+                // Collapse all active panels in this view
+                accordions.forEach(c => {
+                    c.classList.remove('active');
+                    c.querySelector('.accordion-body').style.maxHeight = null;
+                    c.querySelector('.accordion-body').style.opacity = '0';
+                });
+
+                // Toggle target panel
+                if (!isActive) {
+                    card.classList.add('active');
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                }
+            });
+        });
+    }
+
+    // 5. Setup Filter and Tab Listeners
+    // Partner Filters
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentPartnerFilter = this.getAttribute('data-filter');
+            renderEcoDirectory();
+        });
+    });
+
+    // Etiquette Tabs
+    etiquetteTabButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            etiquetteTabButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentEtiquetteTab = this.getAttribute('data-etiquette');
+            renderEtiquetteGuide();
+        });
+    });
+
+    // Apply Badge CTA Action
+    if (applyBadgeBtn) {
+        applyBadgeBtn.addEventListener('click', () => {
+            const contactSection = document.getElementById('contact');
+            const contactMessage = document.querySelector('.contact-form textarea');
+            
+            if (contactMessage) {
+                contactMessage.value = `Hi, I am interested in applying for a "Green Partnership Badge" for our local travel business/initiative in Assam. Please send us the sustainability certification requirements.`;
+            }
+
+            if (contactSection) {
+                window.scrollTo({
+                    top: contactSection.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Visual feedback highlight
+                const contactContainer = contactSection.querySelector('.contact-container');
+                if (contactContainer) {
+                    contactContainer.style.transition = 'box-shadow 0.5s ease';
+                    contactContainer.style.boxShadow = '0 0 30px rgba(0, 255, 170, 0.4)';
+                    setTimeout(() => {
+                        contactContainer.style.boxShadow = '';
+                    }, 1500);
+                }
+            }
+        });
+    }
+
+    // Initial Renders
+    renderEcoDirectory();
+    renderEtiquetteGuide();
 });
