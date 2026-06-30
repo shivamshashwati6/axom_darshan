@@ -584,3 +584,449 @@ footer {
         flex-direction: row !important;
     }
 }
+
+/* ==========================================================================
+   Cultural Calendar & Festival Tracker Styles
+   ========================================================================== */
+.calendar-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    color: var(--accent);
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+    background: var(--accent);
+    color: var(--bg-dark);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.01);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.filters-wrap {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.custom-select {
+    background: #0f1c14;
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    outline: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.custom-select:hover, .custom-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.view-toggle {
+    display: flex;
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.view-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.view-btn:hover {
+    color: var(--accent);
+}
+
+.view-btn.active {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+/* Tab Content Visibility */
+.tab-content {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Grid Layouts */
+.festivals-grid-layout, .events-feed-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+/* Cards styling */
+.festival-card, .event-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 30px;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.festival-card:hover, .event-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(212, 175, 55, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Glowing tag badge styling */
+.card-header-info {
+    margin-bottom: 15px;
+}
+
+.festival-date {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.festival-title, .event-title {
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Season Badge Colors */
+.badge-spring {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.badge-monsoon {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+.badge-autumn {
+    background: rgba(230, 126, 34, 0.1);
+    color: #e67e22;
+    border: 1px solid rgba(230, 126, 34, 0.2);
+}
+
+.badge-winter {
+    background: rgba(155, 89, 182, 0.1);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.2);
+}
+
+.badge-location {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    border: 1px solid var(--glass-border);
+}
+
+.badge-tag {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Glowing tag badge styling */
+.badge-live {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    position: relative;
+    padding-left: 20px;
+}
+
+.badge-live::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #e74c3c;
+    animation: pulseRed 1.5s infinite;
+}
+
+@keyframes pulseRed {
+    0% { transform: translateY(-50%) scale(0.9); opacity: 1; }
+    50% { transform: translateY(-50%) scale(1.4); opacity: 0.4; }
+    100% { transform: translateY(-50%) scale(0.9); opacity: 1; }
+}
+
+.festival-description, .event-description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remind-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.6rem 1.3rem;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.remind-btn:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.remind-btn.reminded {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Timeline Layout */
+.festivals-timeline-layout {
+    position: relative;
+    max-width: 1000px;
+    margin: 40px auto 0 auto;
+    padding: 20px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(212, 175, 55, 0.2);
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 60px;
+    width: 100%;
+    display: flex;
+}
+
+.timeline-item:nth-child(even) {
+    justify-content: flex-end;
+}
+
+.timeline-item:nth-child(odd) {
+    justify-content: flex-start;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    top: 35px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 3px solid var(--accent);
+    transform: translateX(-50%);
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    transition: var(--transition);
+}
+
+.timeline-item:hover .timeline-dot {
+    background: var(--accent);
+    box-shadow: 0 0 15px var(--accent);
+    transform: translateX(-50%) scale(1.2);
+}
+
+.timeline-card {
+    width: 45%;
+}
+
+/* Floating Toast Notification */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(18, 43, 28, 0.95);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 1rem 1.8rem;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+/* Timeline/Filters Responsiveness */
+@media (max-width: 900px) {
+    .calendar-controls {
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+    }
+    
+    .filters-wrap {
+        justify-content: space-between;
+    }
+    
+    .view-toggle {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .timeline-line {
+        left: 20px;
+    }
+    
+    .timeline-dot {
+        left: 20px;
+    }
+    
+    .timeline-item {
+        justify-content: flex-end !important;
+        padding-left: 45px;
+    }
+    
+    .timeline-card {
+        width: 100%;
+    }
+    
+    .filters-wrap {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

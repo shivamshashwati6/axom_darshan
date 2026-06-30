@@ -17,9 +17,10 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#pillars">Explore</a></li>
-            <li><a href="#offbeat">Offbeat</a></li>
-            <li><a href="#itinerary">Itinerary</a></li>
             <li><a href="#culture">Culture</a></li>
+            <li><a href="#offbeat">Offbeat</a></li>
+            <li><a href="#calendar">Calendar</a></li>
+            <li><a href="#itinerary">Itinerary</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <a href="#contact" class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.8rem;">Book Now</a>
@@ -100,6 +101,80 @@
                 <h3 style="font-size: 2.5rem; color: var(--text);">The Misty Valleys of Haflong</h3>
                 <p style="max-width: 600px; margin-top: 10px;">Assam's only hill station, Haflong offers a cool retreat with breathtaking views, vibrant local tribes, and a peace that's hard to find anywhere else.</p>
                 <a href="#contact" class="btn btn-primary" style="margin-top: 20px;">Plan an Offbeat Trip</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="calendar" class="glass">
+        <div class="section-header">
+            <h2>Cultural Calendar</h2>
+            <p>Experience the round-the-year vibrancy of Assam. From seasonal harvesting celebrations to dynamic campus and local cultural events.</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="calendar-tabs">
+            <button class="tab-btn active" data-tab="festivals">
+                <i class="fas fa-calendar-alt"></i> Major Festivals
+            </button>
+            <button class="tab-btn" data-tab="events">
+                <i class="fas fa-landmark"></i> Varsity & Local Hub
+            </button>
+        </div>
+
+        <!-- Festival Controls (Filter & View Toggle) -->
+        <div id="festival-controls" class="calendar-controls">
+            <div class="filters-wrap">
+                <div class="filter-group">
+                    <label for="season-filter"><i class="fas fa-cloud-sun"></i> Season:</label>
+                    <select id="season-filter" class="custom-select">
+                        <option value="all">All Seasons</option>
+                        <option value="spring">Spring</option>
+                        <option value="monsoon">Monsoon</option>
+                        <option value="autumn">Autumn</option>
+                        <option value="winter">Winter</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="location-filter"><i class="fas fa-map-marker-alt"></i> Location:</label>
+                    <select id="location-filter" class="custom-select">
+                        <option value="all">All Locations</option>
+                        <option value="Guwahati">Guwahati</option>
+                        <option value="Majuli">Majuli</option>
+                        <option value="Sivasagar">Sivasagar</option>
+                        <option value="Other">Other Regions</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" id="view-grid" title="Grid View">
+                    <i class="fas fa-th-large"></i> Grid
+                </button>
+                <button class="view-btn" id="view-timeline" title="Timeline View">
+                    <i class="fas fa-stream"></i> Timeline
+                </button>
+            </div>
+        </div>
+
+        <!-- Festivals View Area -->
+        <div id="festivals-tab-content" class="tab-content active">
+            <!-- Grid Layout -->
+            <div id="festivals-grid" class="festivals-grid-layout">
+                <!-- Dynamically populated via JS -->
+            </div>
+            
+            <!-- Timeline Layout (hidden by default) -->
+            <div id="festivals-timeline" class="festivals-timeline-layout hidden">
+                <div class="timeline-line"></div>
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- Varsity & Local Events View Area -->
+        <div id="events-tab-content" class="tab-content">
+            <div id="events-feed" class="events-feed-layout">
+                <!-- Dynamically populated via JS -->
             </div>
         </div>
     </section>
