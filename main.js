@@ -421,4 +421,260 @@ document.addEventListener('DOMContentLoaded', () => {
     // 10. Initial Renders
     renderFestivals();
     renderEvents();
+
+    // ==========================================================================
+    // INDIGENOUS ARTISANS & WEAVERS SPOTLIGHT DATA & LOGIC
+    // ==========================================================================
+
+    // 1. Structured Data Models
+    const weaversData = [
+        {
+            id: 'sualkuchi',
+            hub: 'Sualkuchi (The Silk Town)',
+            name: 'Master Weaver: Pranab Sen',
+            focus: 'Muga & Pat Silk Weaving',
+            badge: 'badge-muga',
+            badgeText: 'Muga Special',
+            bio: 'Weaving golden Muga and pristine white Pat silk using traditional throw-shuttle looms, passing down generations of craftsmanship.',
+            processTitle: 'The Golden Thread Process',
+            processSteps: [
+                '<strong>Reeling the Silk:</strong> The golden thread is extracted from the cocoons of the Antheraea assamensis silkworm.',
+                '<strong>Warping & Beaming:</strong> Setting the threads on the loom beam to define the fabric width and length.',
+                '<strong>Weft Insertion:</strong> The shuttle glides back and forth, weaving intricate traditional motifs (like Kalka and Karbi designs) into the silk.'
+            ]
+        },
+        {
+            id: 'majuli-weaver',
+            hub: 'Majuli Island',
+            name: 'Tribal Artisan: Junali Sonowal',
+            focus: 'Mirizim Motifs & Tribal Looming',
+            badge: 'badge-eco',
+            badgeText: 'Eco-Certified',
+            bio: 'Preserving Mising geometric motifs and organic dye recipes on backstrap loin looms, capturing tribal stories in every weave.',
+            processTitle: 'Tribal Looming & Motifs',
+            processSteps: [
+                '<strong>Motif Conceptualization:</strong> Sketching traditional shapes based on rivers, forests, and Mising legends.',
+                '<strong>Setting the Loin Loom:</strong> Mounting the warp threads on a simple backstrap frame tied to a post.',
+                '<strong>Hand-Picking Motifs:</strong> Slowly inserting color threads by hand to form elevated patterns, giving the fabric its unique textured feel.'
+            ]
+        },
+        {
+            id: 'rural-coop',
+            hub: 'Rural Clusters',
+            name: 'Cooperative Leader: Runumi Bora',
+            focus: 'Ahimsa (Eri) Silk & Natural Dyeing',
+            badge: 'badge-eco',
+            badgeText: 'Eco-Certified',
+            bio: 'A women\'s cooperative spinning non-violent Eri silk and utilizing wild herbs and roots for eco-friendly, natural dyeing.',
+            processTitle: 'Ahimsa Eri Spinning',
+            processSteps: [
+                '<strong>Non-Violent Extraction:</strong> The silkworm leaves the cocoon naturally before it is boiled, earning the name \'Peace Silk\'.',
+                '<strong>Drop Spindle Spinning:</strong> The rough silk fibers are spun by hand into a textured, warm yarn.',
+                '<strong>Natural Dyeing:</strong> Infusing colors from turmeric, iron ore, and native madder root to produce earthy shades.'
+            ]
+        }
+    ];
+
+    const experiencesData = [
+        {
+            id: 'clay-pottery',
+            location: 'Salmora, Majuli',
+            activity: 'Traditional Clay Pottery Workshop',
+            badge: 'badge-slots',
+            badgeText: 'Limited Slots',
+            details: 'Learn the rare art of hand-shaping and beating local clay without a potter\'s wheel. Prepare raw clay, beat it with wooden mallets, and explore open-firing techniques.'
+        },
+        {
+            id: 'mask-making',
+            location: 'Samaguri Satra, Majuli',
+            activity: 'Neo-Vaishnavite Mask-Making Masterclass',
+            badge: 'badge-slots',
+            badgeText: 'Limited Slots',
+            details: 'Craft traditional masks used in Bhaona theatrical plays. Build a bamboo frame, apply clay-dung composite modeling layers, and paint using organic dyes.'
+        },
+        {
+            id: 'loin-loom',
+            location: 'Rural Cluster Hub',
+            activity: 'Loin Loom & Tribal Motif Basics',
+            badge: 'badge-eco',
+            badgeText: 'Eco-Certified',
+            details: 'Experience the ancient loom of Northeast India. Sit on the floor, strap the loom to your back, explore natural dye plants, and pick a simple geometric border.'
+        }
+    ];
+
+    // 2. DOM Elements
+    const artisanTabBtns = document.querySelectorAll('.artisan-tab-btn');
+    const artisanTabContents = document.querySelectorAll('.artisan-tab-content');
+    const weaversGrid = document.getElementById('weavers-grid');
+    const experiencesGrid = document.getElementById('experiences-grid');
+    const weaverModal = document.getElementById('weaver-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    // 3. Render Weavers
+    function renderWeavers() {
+        if (!weaversGrid) return;
+        weaversGrid.innerHTML = '';
+        
+        weaversData.forEach(weaver => {
+            const cardHtml = `
+                <div class="weaver-card" data-id="${weaver.id}">
+                    <div class="artisan-meta">
+                        <span class="artisan-hub">${weaver.hub}</span>
+                        <h3 class="artisan-name">${weaver.name}</h3>
+                        <span class="artisan-focus">${weaver.focus}</span>
+                        <div class="badge-group">
+                            <span class="badge ${weaver.badge}">${weaver.badgeText}</span>
+                        </div>
+                    </div>
+                    <p class="artisan-bio">${weaver.bio}</p>
+                    <div class="card-footer">
+                        <button class="btn btn-primary artisan-explore-btn" data-id="${weaver.id}" style="padding: 0.6rem 1.3rem; font-size: 0.75rem;">
+                            Explore the Craft
+                        </button>
+                    </div>
+                </div>
+            `;
+            weaversGrid.innerHTML += cardHtml;
+        });
+
+        // Attach modal event listeners
+        document.querySelectorAll('.artisan-explore-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const id = this.getAttribute('data-id');
+                openWeaverModal(id);
+            };
+        });
+    }
+
+    // 4. Render Experiences
+    function renderExperiences() {
+        if (!experiencesGrid) return;
+        experiencesGrid.innerHTML = '';
+
+        experiencesData.forEach(exp => {
+            const cardHtml = `
+                <div class="artisan-experience-card" data-id="${exp.id}">
+                    <div class="experience-meta">
+                        <span class="artisan-hub">${exp.location}</span>
+                        <h3 class="experience-activity">${exp.activity}</h3>
+                        <div class="badge-group">
+                            <span class="badge ${exp.badge}">${exp.badgeText}</span>
+                        </div>
+                    </div>
+                    <p class="experience-details">${exp.details}</p>
+                    <div class="card-footer">
+                        <button class="btn btn-primary experience-book-btn" data-activity="${exp.activity}" data-location="${exp.location}" style="padding: 0.6rem 1.3rem; font-size: 0.75rem;">
+                            Request Booking Slot
+                        </button>
+                    </div>
+                </div>
+            `;
+            experiencesGrid.innerHTML += cardHtml;
+        });
+
+        // Attach booking click listeners
+        document.querySelectorAll('.experience-book-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const activity = this.getAttribute('data-activity');
+                const location = this.getAttribute('data-location');
+                triggerBookingRequest(activity, location);
+            };
+        });
+    }
+
+    // 5. Open Modal Logic
+    function openWeaverModal(id) {
+        const weaver = weaversData.find(w => w.id === id);
+        if (!weaver || !weaverModal) return;
+
+        const modalBody = weaverModal.querySelector('.modal-body');
+        let stepsHtml = '';
+        weaver.processSteps.forEach(step => {
+            stepsHtml += `<li>${step}</li>`;
+        });
+
+        modalBody.innerHTML = `
+            <h2 class="modal-weaver-title">${weaver.name}</h2>
+            <span class="modal-weaver-meta">${weaver.hub} | ${weaver.focus}</span>
+            <div class="modal-grid">
+                <div>
+                    <h3 class="modal-section-title"><i class="fas fa-tools"></i> ${weaver.processTitle}</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;">
+                        Assamese handloom techniques rely on pure manual dexterity and century-old geometric guides. Here is the process followed by the artisan:
+                    </p>
+                    <ol class="modal-process-steps">
+                        ${stepsHtml}
+                    </ol>
+                </div>
+            </div>
+        `;
+
+        weaverModal.classList.add('open');
+    }
+
+    // 6. Close Modal
+    if (modalCloseBtn) {
+        modalCloseBtn.onclick = function() {
+            weaverModal.classList.remove('open');
+        };
+    }
+    if (weaverModal) {
+        weaverModal.onclick = function(e) {
+            if (e.target === weaverModal) {
+                weaverModal.classList.remove('open');
+            }
+        };
+    }
+
+    // 7. Booking Redirect & Auto-fill
+    function triggerBookingRequest(activity, location) {
+        const contactSection = document.getElementById('contact');
+        const contactMessage = document.querySelector('.contact-form textarea');
+        
+        if (contactMessage) {
+            contactMessage.value = `Hi, I would like to request a booking slot for the "${activity}" in ${location}. Please let me know the availability.`;
+        }
+
+        if (contactSection) {
+            window.scrollTo({
+                top: contactSection.offsetTop - 80,
+                behavior: 'smooth'
+            });
+            
+            // Pulse the contact form container for feedback
+            const contactContainer = contactSection.querySelector('.contact-container');
+            if (contactContainer) {
+                contactContainer.style.transition = 'box-shadow 0.5s ease';
+                contactContainer.style.boxShadow = '0 0 30px rgba(212, 175, 55, 0.4)';
+                setTimeout(() => {
+                    contactContainer.style.boxShadow = '';
+                }, 1500);
+            }
+        }
+    }
+
+    // 8. Tab Switcher
+    artisanTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            artisanTabBtns.forEach(b => b.classList.remove('active'));
+            artisanTabContents.forEach(c => c.classList.remove('active'));
+            
+            btn.classList.add('active');
+            const targetTab = btn.getAttribute('data-tab');
+            
+            if (targetTab === 'weavers') {
+                document.getElementById('weavers-tab-content').classList.add('active');
+                renderWeavers();
+            } else {
+                document.getElementById('experiences-tab-content').classList.add('active');
+                renderExperiences();
+            }
+        });
+    });
+
+    // 9. Initial Renders
+    renderWeavers();
+    renderExperiences();
 });

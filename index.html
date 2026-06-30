@@ -20,6 +20,7 @@
             <li><a href="#culture">Culture</a></li>
             <li><a href="#offbeat">Offbeat</a></li>
             <li><a href="#calendar">Calendar</a></li>
+            <li><a href="#artisans">Artisans</a></li>
             <li><a href="#itinerary">Itinerary</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -178,6 +179,47 @@
             </div>
         </div>
     </section>
+
+    <section id="artisans" class="glass">
+        <div class="section-header">
+            <h2>Artisans & Weavers</h2>
+            <p>Step onto the Weaver's Trail to explore centuries of heritage craftsmanship, or join an artisan-led workshop to learn traditional motifs yourself.</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="artisan-tabs">
+            <button class="artisan-tab-btn active" data-tab="weavers">
+                <i class="fas fa-hand-holding-heart"></i> The Weaver’s Trail
+            </button>
+            <button class="artisan-tab-btn" data-tab="experiences">
+                <i class="fas fa-palette"></i> Artisan Experiences
+            </button>
+        </div>
+
+        <!-- The Weaver's Trail Tab Content -->
+        <div id="weavers-tab-content" class="artisan-tab-content active">
+            <div id="weavers-grid" class="weavers-grid-layout">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- Artisan Experiences Tab Content -->
+        <div id="experiences-tab-content" class="artisan-tab-content">
+            <div id="experiences-grid" class="experiences-grid-layout">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Weaver Detail Modal -->
+    <div id="weaver-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <div class="modal-body">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </div>
 
     <section id="itinerary">
         <div class="section-header">
