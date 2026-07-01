@@ -1,30 +1,34 @@
 import { useApp } from '../context/AppContext';
 import { circuitsData, ecoPartnersData, communityReviews } from '../data/mockData';
 
-const pillars = [
+const guidePillarsData = [
   {
-    icon: '🦏',
-    label: 'Wildlife',
-    title: 'Wildlife Sanctuaries',
-    desc: 'One-horned rhinos, tigers, and river dolphins across Kaziranga, Manas & Pobitora.',
+    id: "fabric-grid",
+    name: "Sualkuchi Weavers",
+    subtitle: "(Fabric Grid)",
+    tag: "[ MUGA SILK WEAVERS | SUALKUCHI CLUSTER ]",
+    imageSrc: "https://lh3.googleusercontent.com/d/1O1uC_o8o3XG96IuI90bE-qS5-v_Z_C3X",
   },
   {
-    icon: '🏛️',
-    label: 'Heritage',
-    title: 'Ahom Heritage',
-    desc: 'Magnificent palace ruins, Rang Ghar amphitheatres, and 600-year-old Ahom kingdom relics.',
+    id: "tea-trails",
+    name: "Mancotta Bungalow",
+    subtitle: "(Tea Trails)",
+    tag: "[ MANCOTTA CHANG BUNGALOW | DIBRUGARH TRAIL ]",
+    imageSrc: "https://lh3.googleusercontent.com/d/1GZ6rB5P5X7L96IuI80bE-qS5-v_Z_D4Y",
   },
   {
-    icon: '🧵',
-    label: 'Craft',
-    title: 'Living Craft Traditions',
-    desc: 'Muga silk, bamboo craft, mask-making, and hand-loomed textiles from village artisans.',
+    id: "sanctuaries-ledger",
+    name: "Majuli Satra Mask Maker",
+    subtitle: "(Sanctuaries)",
+    tag: "[ NEO-VAISHNAVITE ARTIST | MAJULI ISLAND ]",
+    imageSrc: "https://lh3.googleusercontent.com/d/1F3uB_o8o3XG96IuI90bE-qS5-v_Z_E5Z",
   },
   {
-    icon: '🌿',
-    label: 'Eco',
-    title: 'Eco & Community Tourism',
-    desc: 'Responsible travel through tribal villages, organic homestays, and conservation projects.',
+    id: "field-notebook",
+    name: "Field Notes Planner",
+    subtitle: "(Journal)",
+    tag: "[ MINIMAL TRAVEL JOURNAL | FIELD NOTES PLANNED ]",
+    imageSrc: "https://lh3.googleusercontent.com/d/1A5rB_p6X7L96IuI80bE-qS5-v_Z_F6A",
   },
 ];
 
@@ -123,42 +127,63 @@ export default function Dashboard({ onNavigate }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0" style={{ border: '1px solid var(--indigo-12)' }}>
-            {pillars.map((p, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {guidePillarsData.map((p, idx) => (
               <div
-                key={p.title}
-                className="stagger-item"
-                style={{
-                  padding: '2rem 1.5rem',
-                  borderRight: idx < 3 ? '1px solid var(--indigo-12)' : 'none',
-                  borderTop: '3px solid transparent',
-                  transition: 'border-top-color 0.3s ease-out, background-color 0.3s ease-out',
-                  cursor: 'default',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderTopColor = 'var(--gold)';
-                  e.currentTarget.style.backgroundColor = 'var(--cream)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderTopColor = 'transparent';
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
+                key={p.id}
+                className="stagger-item flex flex-col"
+                style={{ animationDelay: `${idx * 0.08}s` }}
               >
-                <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>{p.icon}</div>
-                <p className="muted-label mb-2">{p.label}</p>
-                <h3 style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: '1.2rem',
-                  fontWeight: 600,
-                  color: 'var(--indigo)',
-                  marginBottom: '0.75rem',
-                  letterSpacing: '0.02em',
-                }}>
-                  {p.title}
-                </h3>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem', color: 'var(--indigo-60)', lineHeight: 1.7 }}>
-                  {p.desc}
-                </p>
+                {/* Asymmetric framing block */}
+                <div
+                  className="bg-[#EADCC9] border border-[#1A2E40] rounded-none overflow-hidden"
+                  style={{
+                    transition: 'border-color 0.3s ease-out, background-color 0.3s ease-out',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = 'var(--gold)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = '#1A2E40';
+                  }}
+                >
+                  <img
+                    src={p.imageSrc}
+                    alt={p.name}
+                    className="w-full h-64 object-cover rounded-none"
+                    loading="lazy"
+                  />
+                  <div style={{ padding: '1rem' }}>
+                    <h3
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        color: 'var(--indigo)',
+                        margin: 0,
+                      }}
+                    >
+                      {p.name}
+                    </h3>
+                    <p
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontSize: '0.72rem',
+                        color: 'var(--indigo-60)',
+                        marginTop: '2px',
+                        textTransform: 'uppercase',
+                        fontWeight: 500,
+                        letterSpacing: '0.04em',
+                      }}
+                    >
+                      {p.subtitle}
+                    </p>
+                  </div>
+                </div>
+                {/* Structural caption bracket underneath */}
+                <span className="text-xs tracking-widest text-[#1A2E40] font-mono mt-4 block">
+                  {p.tag}
+                </span>
               </div>
             ))}
           </div>
