@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import SoundscapePlayer from './SoundscapePlayer';
+
 
 const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: '🧭' },
-  { id: 'planner',   label: 'Planner',   icon: '🗺️' },
-  { id: 'artisans',  label: 'Artisans',  icon: '🧵' },
-  { id: 'calendar',  label: 'Calendar',  icon: '📅' },
-  { id: 'community', label: 'Community', icon: '💬' },
+  { id: 'dashboard', label: 'CRUISE' },
+  { id: 'fabric',    label: 'FABRIC GRID' },
+  { id: 'tea',       label: 'TEA TRAILS' },
+  { id: 'sanctuary', label: 'WILDERNESS LEDGER' },
+  { id: 'planner',   label: 'FIELD PLANNER' },
 ];
 
 export default function MasterLayout({ currentPage, onNavigate, children }) {
@@ -15,102 +15,187 @@ export default function MasterLayout({ currentPage, onNavigate, children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bone)', color: 'var(--indigo)' }}>
+
       {/* ── Top Navigation Bar ───────────────────────────── */}
-      <header className="fixed top-0 inset-x-0 z-50 glass border-b border-white/5 px-4 md:px-8 py-3 flex items-center justify-between">
+      <header
+        className="fixed top-0 inset-x-0 z-50 px-6 md:px-10 flex items-center justify-between"
+        style={{
+          backgroundColor: 'rgba(249, 248, 246, 0.85)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          borderBottom: '1px solid var(--indigo-12)',
+          height: '64px',
+        }}
+      >
         {/* Logo */}
         <button
           onClick={() => onNavigate('dashboard')}
-          className="font-serif text-xl font-bold tracking-widest"
-          style={{ background: 'linear-gradient(90deg,#fff 60%,#00e5ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          className="flex items-center gap-3 group"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
-          Axom Darshan
+          {/* Geometric logo mark — twin diagonal lines */}
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="27" height="27" stroke="var(--indigo)" strokeWidth="1"/>
+            <line x1="4" y1="24" x2="14" y2="4" stroke="var(--gold)" strokeWidth="1.5"/>
+            <line x1="14" y1="4" x2="24" y2="24" stroke="var(--indigo)" strokeWidth="1"/>
+          </svg>
+          <span
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              color: 'var(--indigo)',
+              lineHeight: 1,
+            }}
+          >
+            Axom Darshan
+          </span>
         </button>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-7">
           {navItems.map(item => (
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-300 ${
-                currentPage === item.id
-                  ? 'nav-active border-cyan-400/30'
-                  : 'border-transparent text-white/50 hover:text-white hover:border-white/10'
-              }`}
+              className={`nav-link ${currentPage === item.id ? 'active' : ''}`}
             >
-              <span>{item.icon}</span>
               {item.label}
             </button>
           ))}
         </nav>
 
-        {/* Right: user + mobile toggle */}
+        {/* Right: status badges + mobile toggle */}
         <div className="flex items-center gap-3">
-          {/* Itinerary badge */}
           {state.itinerary.length > 0 && (
             <button
               onClick={() => onNavigate('planner')}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-amber-400/30 text-amber-300 bg-amber-400/5 hover:bg-amber-400/10 transition-all"
+              className="hidden md:inline-flex tag-badge hover:border-[var(--indigo)] transition-colors"
+              style={{ cursor: 'pointer' }}
             >
-              🗺️ {state.itinerary.length} days planned
+              {state.itinerary.length} days planned
             </button>
           )}
-          {/* Bookings badge */}
           {state.bookedWorkshops.length > 0 && (
             <button
               onClick={() => onNavigate('artisans')}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-400/30 text-emerald-300 bg-emerald-400/5 hover:bg-emerald-400/10 transition-all"
+              className="hidden md:inline-flex tag-gold hover:opacity-80 transition-opacity"
+              style={{ cursor: 'pointer' }}
             >
-              🧵 {state.bookedWorkshops.length} booked
+              {state.bookedWorkshops.length} booked
             </button>
           )}
+
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-white/60 hover:text-white"
+            className="md:hidden p-1"
             onClick={() => setMobileOpen(v => !v)}
             aria-label="Toggle menu"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--indigo)' }}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               {mobileOpen
-                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               }
             </svg>
           </button>
         </div>
       </header>
 
+      {/* ── Geometric Divider Strip ───────────────────────── */}
+      {/* Rendered below navbar via the sticky offset; visible only on scroll */}
+
       {/* ── Mobile Dropdown ───────────────────────────────── */}
       {mobileOpen && (
-        <div className="fixed top-[60px] inset-x-0 z-40 glass border-b border-white/5 p-4 flex flex-col gap-1 md:hidden">
+        <div
+          className="fixed top-[64px] inset-x-0 z-40 px-6 py-5 flex flex-col gap-1 md:hidden fade-in"
+          style={{
+            backgroundColor: 'var(--bone)',
+            borderBottom: '1px solid var(--indigo-12)',
+          }}
+        >
+          <div className="geo-divider mb-4" />
           {navItems.map(item => (
             <button
               key={item.id}
               onClick={() => { onNavigate(item.id); setMobileOpen(false); }}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold border transition-all ${
-                currentPage === item.id
-                  ? 'nav-active border-cyan-400/30'
-                  : 'border-transparent text-white/50 hover:text-white'
-              }`}
+              className="flex items-center justify-between px-3 py-3 text-left transition-colors"
+              style={{
+                background: currentPage === item.id ? 'var(--cream)' : 'transparent',
+                borderLeft: currentPage === item.id ? '2px solid var(--gold)' : '2px solid transparent',
+                color: 'var(--indigo)',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '0.875rem',
+                fontWeight: currentPage === item.id ? 600 : 400,
+                letterSpacing: '0.04em',
+                border: 'none',
+                cursor: 'pointer',
+                width: '100%',
+              }}
             >
-              <span className="text-lg">{item.icon}</span>
               {item.label}
+              {currentPage === item.id && (
+                <span style={{ color: 'var(--gold)', fontSize: '0.75rem' }}>◆</span>
+              )}
             </button>
           ))}
         </div>
       )}
 
       {/* ── Page Content ──────────────────────────────────── */}
-      <main className="flex-1 pt-[72px]">
+      <main className="flex-1" style={{ paddingTop: '64px' }}>
         {children}
       </main>
+
+      {/* ── Footer Geo Strip ──────────────────────────────── */}
+      <footer
+        className="mt-auto px-6 md:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-4"
+        style={{
+          borderTop: '1px solid var(--indigo-12)',
+          backgroundColor: 'var(--cream)',
+        }}
+      >
+        <div className="geo-divider-gold" style={{ position: 'absolute', top: 0, left: 0, right: 0, opacity: 0.6 }} />
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
+            <rect x="0.5" y="0.5" width="27" height="27" stroke="var(--indigo)" strokeWidth="1"/>
+            <line x1="4" y1="24" x2="14" y2="4" stroke="var(--gold)" strokeWidth="1.5"/>
+            <line x1="14" y1="4" x2="24" y2="24" stroke="var(--indigo)" strokeWidth="1"/>
+          </svg>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontWeight: 600, color: 'var(--indigo)', letterSpacing: '0.06em' }}>
+            Axom Darshan
+          </span>
+        </div>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', color: 'var(--indigo-60)', letterSpacing: '0.05em' }}>
+          Preserving the living traditions of Assam · Est. 2024
+        </p>
+        <div className="flex gap-6">
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
+                color: 'var(--indigo-60)', letterSpacing: '0.05em',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => e.target.style.color = 'var(--indigo)'}
+              onMouseLeave={e => e.target.style.color = 'var(--indigo-60)'}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </footer>
 
       {/* ── Global Notification Toast ─────────────────────── */}
       <NotificationToast />
 
-      {/* ── Persistent Floating Soundscape Player ─────────── */}
-      <SoundscapePlayer />
+
     </div>
   );
 }
@@ -119,14 +204,28 @@ function NotificationToast() {
   const { state } = useApp();
   if (!state.notification) return null;
 
-  const colors = {
-    success: 'border-emerald-400/40 text-emerald-300',
-    error:   'border-red-400/40 text-red-300',
-    info:    'border-cyan-400/40 text-cyan-300',
+  const styles = {
+    success: { borderColor: 'var(--gold)',       color: '#5A3800' },
+    error:   { borderColor: 'var(--red-accent)', color: 'var(--red-accent)' },
+    info:    { borderColor: 'var(--indigo-30)',  color: 'var(--indigo)' },
   };
 
+  const s = styles[state.notification.type] || styles.info;
+
   return (
-    <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-50 glass border px-6 py-3 rounded-full text-sm font-semibold shadow-2xl animate-pulse-glow ${colors[state.notification.type] || colors.info}`}>
+    <div
+      className="toast-animate fixed bottom-24 left-1/2 z-50 px-6 py-3 text-sm font-semibold shadow-md"
+      style={{
+        transform: 'translateX(-50%)',
+        backgroundColor: 'var(--bone)',
+        border: `1px solid ${s.borderColor}`,
+        borderRadius: '2px',
+        color: s.color,
+        fontFamily: "'Inter', sans-serif",
+        letterSpacing: '0.04em',
+        whiteSpace: 'nowrap',
+      }}
+    >
       {state.notification.message}
     </div>
   );

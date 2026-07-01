@@ -3,6 +3,30 @@ import { communityReviews } from '../data/mockData';
 
 const CIRCUITS = ['All', 'Wildlife', 'Heritage', 'Spiritual'];
 
+function StarRating({ rating, interactive = false, onChange }) {
+  return (
+    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+      {[1, 2, 3, 4, 5].map(n => (
+        <button
+          key={n}
+          type="button"
+          onClick={interactive ? () => onChange(n) : undefined}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: interactive ? 'pointer' : 'default',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 12 12" fill={n <= rating ? 'var(--gold)' : 'var(--indigo-12)'}>
+            <path d="M6 0l1.5 4.5H12L8.5 7.5l1.5 4.5L6 9l-4 3 1.5-4.5L0 4.5h4.5Z"/>
+          </svg>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Community() {
   const [filter, setFilter] = useState('All');
   const [newReview, setNewReview] = useState({ user: '', text: '', rating: 5 });
@@ -31,114 +55,243 @@ export default function Community() {
   };
 
   return (
-    <div className="px-4 md:px-8 py-12 max-w-7xl mx-auto">
-      <div className="mb-10">
-        <h1 className="section-title mb-2">Traveler Community</h1>
-        <p className="text-white/40 text-sm">Authentic stories, trip reviews, and travel wisdom from real Assam explorers</p>
-      </div>
+    <div style={{ backgroundColor: 'var(--bone)', minHeight: '100%' }}>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
-        {/* ── Feed ──────────────────────────────────────────── */}
-        <div>
-          {/* Filters */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {CIRCUITS.map(c => (
-              <button
-                key={c}
-                onClick={() => setFilter(c)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${
-                  filter === c
-                    ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-300'
-                    : 'border-white/10 text-white/50 hover:text-white hover:border-white/20'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-            <span className="ml-auto text-xs text-white/30 self-center">{filtered.length} reviews</span>
+      {/* ── Page Header ───────────────────────────────────── */}
+      <section
+        className="px-6 md:px-16 pt-16 pb-12"
+        style={{ borderBottom: '1px solid var(--indigo-12)' }}
+      >
+        <p className="muted-label mb-3">Community Voices</p>
+        <h1 className="section-heading mb-3">Traveler Community</h1>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', color: 'var(--indigo-60)', lineHeight: 1.7 }}>
+          Authentic stories, trip reviews, and travel wisdom from real Assam explorers
+        </p>
+      </section>
+
+      <div className="geo-divider" />
+
+      <div className="px-6 md:px-16 py-16 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
+
+          {/* ── Feed ──────────────────────────────────────── */}
+          <div>
+            {/* Filters + count */}
+            <div className="flex flex-wrap items-center gap-2 mb-8">
+              {CIRCUITS.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={`filter-pill ${filter === c ? 'active' : ''}`}
+                >
+                  {c}
+                </button>
+              ))}
+              <span style={{
+                marginLeft: 'auto',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '0.75rem',
+                color: 'var(--indigo-60)',
+                letterSpacing: '0.04em',
+              }}>
+                {filtered.length} reviews
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {filtered.map((r, idx) => (
+                <div
+                  key={r.id}
+                  className="stagger-item"
+                  style={{
+                    border: '1px solid var(--indigo-12)',
+                    borderRadius: '2px',
+                    backgroundColor: 'var(--bone)',
+                    padding: '1.5rem',
+                    animationDelay: `${idx * 0.07}s`,
+                    transition: 'border-color 0.3s ease-out, background-color 0.3s ease-out',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.backgroundColor = 'var(--cream)';
+                    e.currentTarget.style.borderColor = 'var(--indigo-30)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.backgroundColor = 'var(--bone)';
+                    e.currentTarget.style.borderColor = 'var(--indigo-12)';
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    {/* Avatar */}
+                    <div style={{
+                      flexShrink: 0,
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '2px',
+                      backgroundColor: 'var(--indigo)',
+                      color: 'var(--bone)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: '0.95rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.05em',
+                    }}>
+                      {r.avatar}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      {/* Meta row */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.625rem' }}>
+                        <div>
+                          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.875rem', fontWeight: 600, color: 'var(--indigo)' }}>
+                            {r.user}
+                          </p>
+                          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.72rem', color: 'var(--indigo-60)', marginTop: '1px' }}>
+                            {r.location} · {r.date}
+                          </p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexShrink: 0 }}>
+                          <span className="tag-badge">{r.circuit}</span>
+                          <StarRating rating={r.rating} />
+                        </div>
+                      </div>
+
+                      {/* Review text */}
+                      <p style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                        fontSize: '1.05rem',
+                        fontStyle: 'italic',
+                        color: 'var(--indigo)',
+                        lineHeight: 1.65,
+                      }}>
+                        "{r.text}"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {filtered.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '5rem 1rem' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--indigo-30)' }}>◇</div>
+                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.1rem', color: 'var(--indigo-60)' }}>
+                    No reviews in this category yet.
+                  </p>
+                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem', color: 'var(--indigo-30)', marginTop: '0.5rem' }}>
+                    Be the first to share your story.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-4">
-            {filtered.map(r => (
-              <div key={r.id} className="glass border border-white/8 rounded-2xl p-5 glow-hover">
-                <div className="flex items-start gap-4">
-                  <div className="shrink-0 w-10 h-10 rounded-full bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center text-sm font-bold text-cyan-300">
-                    {r.avatar}
+          {/* ── Submit Review ──────────────────────────────── */}
+          <aside>
+            <div
+              className="sticky"
+              style={{
+                top: '84px',
+                border: '1px solid var(--indigo-12)',
+                borderTop: '2px solid var(--gold)',
+                borderRadius: '2px',
+                backgroundColor: 'var(--cream)',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Form header */}
+              <div style={{ padding: '1.25rem 1.25rem 0' }}>
+                <p className="muted-label mb-2">Share Your Story</p>
+                <h3 style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontSize: '1.2rem',
+                  fontWeight: 600,
+                  color: 'var(--indigo)',
+                  letterSpacing: '0.02em',
+                  marginBottom: '1rem',
+                }}>
+                  Write a Review
+                </h3>
+
+                {submitted && (
+                  <div
+                    className="tag-gold fade-in"
+                    style={{ display: 'block', marginBottom: '1rem', padding: '0.5rem 0.75rem', textAlign: 'center' }}
+                  >
+                    Review posted successfully
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <div>
-                        <p className="font-semibold text-sm">{r.user}</p>
-                        <p className="text-xs text-white/40">{r.location} · {r.date}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="eco-badge text-[10px]">{r.circuit}</span>
-                        <span className="text-amber-400 text-xs">{'★'.repeat(r.rating)}</span>
-                      </div>
-                    </div>
-                    <p className="text-white/60 text-sm leading-relaxed mt-3">"{r.text}"</p>
+                )}
+              </div>
+
+              <div className="geo-divider" />
+
+              <form onSubmit={handleSubmit} style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  value={newReview.user}
+                  onChange={e => setNewReview(p => ({ ...p, user: e.target.value }))}
+                  className="heritage-input"
+                />
+                <textarea
+                  rows={5}
+                  placeholder="Tell us about your Assam experience…"
+                  value={newReview.text}
+                  onChange={e => setNewReview(p => ({ ...p, text: e.target.value }))}
+                  className="heritage-input"
+                  style={{ resize: 'none', lineHeight: 1.7 }}
+                />
+
+                {/* Star rating */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', color: 'var(--indigo-60)', letterSpacing: '0.05em' }}>
+                    Rating
+                  </span>
+                  <StarRating
+                    rating={newReview.rating}
+                    interactive={true}
+                    onChange={n => setNewReview(p => ({ ...p, rating: n }))}
+                  />
+                </div>
+
+                <button type="submit" className="btn-primary" style={{ marginTop: '0.25rem' }}>
+                  Post Review
+                </button>
+              </form>
+
+              {/* Community stats */}
+              <div style={{
+                margin: '0 1.25rem 1.25rem',
+                padding: '1rem',
+                border: '1px solid var(--indigo-12)',
+                borderRadius: '2px',
+                backgroundColor: 'var(--bone)',
+              }}>
+                <p className="muted-label mb-3">Community Stats</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', color: 'var(--indigo-60)' }}>Total Reviews</span>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontWeight: 600, color: 'var(--indigo)' }}>{reviews.length}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', color: 'var(--indigo-60)' }}>Avg Rating</span>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontWeight: 600, color: 'var(--gold)' }}>
+                      {(reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)} ★
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', color: 'var(--indigo-60)' }}>Countries</span>
+                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontWeight: 600, color: 'var(--indigo)' }}>4</span>
                   </div>
                 </div>
               </div>
-            ))}
-            {filtered.length === 0 && (
-              <div className="text-center py-20 text-white/30">
-                <p className="text-4xl mb-3">💬</p>
-                <p className="text-sm">No reviews in this category yet. Be the first!</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ── Submit Review ─────────────────────────────────── */}
-        <aside>
-          <div className="glass border border-white/8 rounded-2xl p-5 sticky top-24">
-            <h3 className="font-bold text-sm mb-4">✍️ Share Your Story</h3>
-            {submitted && (
-              <div className="eco-badge mb-4 text-xs">✅ Review posted!</div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <input
-                type="text"
-                placeholder="Your name"
-                value={newReview.user}
-                onChange={e => setNewReview(p => ({ ...p, user: e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-cyan-400/40"
-              />
-              <textarea
-                rows={4}
-                placeholder="Tell us about your Assam experience…"
-                value={newReview.text}
-                onChange={e => setNewReview(p => ({ ...p, text: e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-cyan-400/40 resize-none"
-              />
-              {/* Star rating */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-white/40">Rating:</span>
-                {[1, 2, 3, 4, 5].map(n => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setNewReview(p => ({ ...p, rating: n }))}
-                    className={`text-lg transition-all ${n <= newReview.rating ? 'text-amber-400' : 'text-white/20'}`}
-                  >
-                    ★
-                  </button>
-                ))}
-              </div>
-              <button type="submit" className="w-full btn-neon">Post Review</button>
-            </form>
-
-            {/* Stats */}
-            <div className="mt-6 pt-5 border-t border-white/5 space-y-2">
-              <p className="text-xs text-white/30 uppercase tracking-wider font-semibold mb-3">Community Stats</p>
-              <p className="text-xs text-white/50">📝 {reviews.length} total reviews</p>
-              <p className="text-xs text-white/50">⭐ {(reviews.reduce((s,r)=>s+r.rating,0)/reviews.length).toFixed(1)} avg rating</p>
-              <p className="text-xs text-white/50">🌏 4 countries represented</p>
             </div>
-          </div>
-        </aside>
+          </aside>
+
+        </div>
       </div>
+
+      <div className="geo-divider" />
     </div>
   );
 }

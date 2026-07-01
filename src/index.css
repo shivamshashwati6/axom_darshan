@@ -1,120 +1,397 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
-/* ── Custom glass / neon theme tokens ── */
+/* ══════════════════════════════════════════════════════════════
+   HERITAGE WEAVER — TEXTURED MINIMALISM
+   Palette inspired by Assamese Muga, Pat & Eri silk traditions
+   ══════════════════════════════════════════════════════════════ */
+
 @layer base {
   :root {
-    --glass-bg: rgba(10, 15, 12, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --neon-cyan: #00e5ff;
-    --neon-emerald: #00ffaa;
-    --neon-amber: #d4af37;
-    --text-muted: rgba(255, 255, 255, 0.5);
+    --bone:        #F9F8F6;   /* Primary canvas */
+    --indigo:      #1A2E40;   /* Deep indigo — text & structure */
+    --indigo-60:   rgba(26, 46, 64, 0.60);
+    --indigo-30:   rgba(26, 46, 64, 0.30);
+    --indigo-12:   rgba(26, 46, 64, 0.12);
+    --indigo-06:   rgba(26, 46, 64, 0.06);
+    --cream:       #EADCC9;   /* Eri silk cream — card blocks */
+    --cream-dark:  #DDD0B8;   /* Slightly darker cream for hover */
+    --gold:        #DCA134;   /* Muga gold — razor accents */
+    --gold-20:     rgba(220, 161, 52, 0.20);
+    --red-accent:  #C83232;   /* Muted red — secondary accent */
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    @apply bg-[#070d09] text-white font-sans antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,229,255,0.06) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,255,170,0.04) 0%, transparent 60%);
-    background-attachment: fixed;
+    background-color: var(--bone);
+    color: var(--indigo);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 
   * { box-sizing: border-box; }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   COMPONENT UTILITIES
+   ══════════════════════════════════════════════════════════════ */
+
 @layer components {
-  /* Glass panel */
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
+
+  /* ── Heritage Card ───────────────────────────────────────── */
+  /* Sharp-edged flat block with cream fill and thin Indigo border */
+  .heritage-card {
+    background-color: var(--cream);
+    border: 1px solid var(--indigo-12);
+    border-radius: 2px;
+    transition: border-color 0.3s ease-out, background-color 0.3s ease-out;
+  }
+  .heritage-card:hover {
+    border-color: var(--indigo-30);
   }
 
-  /* Neon section heading underline */
-  .section-title {
-    @apply text-3xl font-bold tracking-tight;
-    background: linear-gradient(90deg, #fff 60%, var(--neon-cyan) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* ── Bone Card ───────────────────────────────────────────── */
+  /* Transparent / bone background, bounded by thin Indigo border */
+  .bone-card {
+    background-color: var(--bone);
+    border: 1px solid var(--indigo-12);
+    border-radius: 2px;
+    transition: border-color 0.3s ease-out;
+  }
+  .bone-card:hover {
+    border-color: var(--indigo-30);
   }
 
-  /* Glowing border on hover */
-  .glow-hover {
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  }
-  .glow-hover:hover {
-    border-color: rgba(0, 229, 255, 0.35) !important;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.1), 0 8px 32px rgba(0,0,0,0.4);
-  }
-
-  /* Eco-green badge */
-  .eco-badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold;
-    background: rgba(0, 255, 170, 0.08);
-    border: 1px solid rgba(0, 255, 170, 0.3);
-    color: var(--neon-emerald);
+  /* ── Section Heading ─────────────────────────────────────── */
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--indigo);
+    line-height: 1.1;
   }
 
-  /* Primary neon button */
-  .btn-neon {
-    @apply px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300;
-    background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(0,229,255,0.05));
-    border: 1px solid rgba(0, 229, 255, 0.4);
-    color: var(--neon-cyan);
-  }
-  .btn-neon:hover {
-    background: rgba(0, 229, 255, 0.2);
-    box-shadow: 0 0 18px rgba(0, 229, 255, 0.3);
-    transform: translateY(-1px);
+  /* ── Page Title ──────────────────────────────────────────── */
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--indigo);
   }
 
-  /* Active nav pill */
-  .nav-active {
-    background: rgba(0, 229, 255, 0.1);
-    border-color: rgba(0, 229, 255, 0.3);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+  /* ── Muted Label ─────────────────────────────────────────── */
+  .muted-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--indigo-60);
+  }
+
+  /* ── Primary Button ──────────────────────────────────────── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.5rem;
+    background-color: var(--indigo);
+    color: var(--bone);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid var(--indigo);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+  }
+  .btn-primary:hover {
+    background-color: var(--bone);
+    color: var(--indigo);
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── Outline Button ──────────────────────────────────────── */
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: transparent;
+    color: var(--indigo);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid var(--indigo-30);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.25s ease-out, background-color 0.25s ease-out;
+  }
+  .btn-outline:hover {
+    border-color: var(--indigo);
+    background-color: var(--indigo-06);
+  }
+  .btn-outline:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* ── Gold Outline Button ─────────────────────────────────── */
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: transparent;
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.25s ease-out;
+  }
+  .btn-gold:hover {
+    background-color: var(--gold-20);
+  }
+
+  /* ── Tag Badge ───────────────────────────────────────────── */
+  /* Replaces old eco-badge — flat cream with Indigo text & border */
+  .tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--cream);
+    border: 1px solid var(--indigo-30);
+    border-radius: 2px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--indigo);
+  }
+
+  /* ── Gold Tag ────────────────────────────────────────────── */
+  .tag-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    background-color: var(--gold-20);
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #8A5C00;
+  }
+
+  /* ── Nav Link ────────────────────────────────────────────── */
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.125rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--indigo-60);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.25s ease-out;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--gold);
+    transition: width 0.3s ease-out;
+  }
+  .nav-link:hover {
+    color: var(--indigo);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  .nav-link.active {
+    color: var(--indigo);
+    font-weight: 600;
+  }
+  .nav-link.active::after {
+    width: 100%;
+    background-color: var(--gold);
+  }
+
+  /* ── Filter Pill ─────────────────────────────────────────── */
+  .filter-pill {
+    padding: 0.3rem 0.875rem;
+    background-color: transparent;
+    border: 1px solid var(--indigo-12);
+    border-radius: 2px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: capitalize;
+    color: var(--indigo-60);
+    cursor: pointer;
+    transition: all 0.25s ease-out;
+  }
+  .filter-pill:hover {
+    border-color: var(--indigo-30);
+    color: var(--indigo);
+  }
+  .filter-pill.active {
+    background-color: var(--indigo);
+    border-color: var(--indigo);
+    color: var(--bone);
+  }
+
+  /* ── Heritage Input ──────────────────────────────────────── */
+  .heritage-input {
+    width: 100%;
+    background-color: var(--bone);
+    border: 1px solid var(--indigo-30);
+    border-radius: 2px;
+    padding: 0.625rem 0.875rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--indigo);
+    outline: none;
+    transition: border-color 0.25s ease-out;
+  }
+  .heritage-input::placeholder {
+    color: var(--indigo-30);
+  }
+  .heritage-input:focus {
+    border-color: var(--indigo);
+  }
+
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GEOMETRIC MOTIF — Kingkhap Peak Divider
+   SVG inline background — mimics Assamese handloom border peaks
+   ══════════════════════════════════════════════════════════════ */
+
+.geo-divider {
+  height: 8px;
+  width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8'%3E%3Cpolyline points='0,8 12,0 24,8' fill='none' stroke='%231A2E40' stroke-width='1' stroke-opacity='0.15'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.geo-divider-gold {
+  height: 8px;
+  width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='8'%3E%3Cpolyline points='0,8 12,0 24,8' fill='none' stroke='%23DCA134' stroke-width='1' stroke-opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+/* Gold left-border accent on cards */
+.card-accent-left {
+  border-left: 2px solid var(--gold) !important;
+}
+
+/* Gold top-border accent on cards */
+.card-accent-top {
+  border-top: 2px solid var(--gold) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAGGER LOAD ANIMATIONS
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* ── Pulsing glow animation ── */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 6px rgba(0,229,255,0.4); }
-  50%       { box-shadow: 0 0 18px rgba(0,229,255,0.8); }
+.stagger-item {
+  animation: fadeSlideUp 0.5s ease-out both;
 }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.12s; }
+.stagger-item:nth-child(3) { animation-delay: 0.19s; }
+.stagger-item:nth-child(4) { animation-delay: 0.26s; }
+.stagger-item:nth-child(5) { animation-delay: 0.33s; }
+.stagger-item:nth-child(6) { animation-delay: 0.40s; }
 
-/* ── Equalizer bar bounce ── */
-@keyframes eq-bounce {
-  0%   { height: 4px; }
-  50%  { height: 18px; }
-  100% { height: 8px; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
-.eq-playing .eq-bar {
-  animation: eq-bounce 0.8s ease-in-out infinite alternate;
-}
-.eq-bar:nth-child(2) { animation-delay: 0.15s; }
-.eq-bar:nth-child(3) { animation-delay: 0.30s; }
-.eq-bar:nth-child(4) { animation-delay: 0.10s; }
-.eq-bar:nth-child(5) { animation-delay: 0.25s; }
+.fade-in { animation: fadeIn 0.4s ease-out both; }
 
-/* ── River flow dash animation ── */
-@keyframes flow-river {
-  to { stroke-dashoffset: -600; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   LOADING SKELETON PULSE
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes skeleton-pulse {
+  0%, 100% { background-color: var(--cream); }
+  50%       { background-color: var(--cream-dark); }
 }
-.river-flow {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 0;
-  animation: flow-river 15s linear infinite;
-  filter: drop-shadow(0 0 4px #00ffff);
+.skeleton {
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  border-radius: 2px;
 }
 
-/* ── Custom scrollbar ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.25); border-radius: 3px; }
+/* ══════════════════════════════════════════════════════════════
+   NOTIFICATION TOAST — entry slide
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.toast-animate { animation: toast-in 0.3s ease-out both; }
+
+/* ══════════════════════════════════════════════════════════════
+   CUSTOM SCROLLBAR — Heritage palette
+   ══════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--indigo-30); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--indigo); }

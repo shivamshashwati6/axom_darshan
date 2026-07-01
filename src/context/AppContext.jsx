@@ -17,14 +17,6 @@ const initialState = {
   // Workshop bookings
   bookedWorkshops: [],
 
-  // Global audio
-  audio: {
-    isPlaying: false,
-    volume: 0.5,
-    activeTrackId: 't1',
-    isExpanded: false,
-  },
-
   // UI state
   notification: null, // { message, type: 'success'|'info'|'error' }
 };
@@ -39,8 +31,7 @@ export const Actions = {
   REORDER_DAYS: 'REORDER_DAYS',
   BOOK_WORKSHOP: 'BOOK_WORKSHOP',
   CANCEL_WORKSHOP: 'CANCEL_WORKSHOP',
-  SET_AUDIO: 'SET_AUDIO',
-  TOGGLE_AUDIO_EXPANDED: 'TOGGLE_AUDIO_EXPANDED',
+
   SHOW_NOTIFICATION: 'SHOW_NOTIFICATION',
   CLEAR_NOTIFICATION: 'CLEAR_NOTIFICATION',
 };
@@ -99,12 +90,6 @@ function appReducer(state, action) {
         bookedWorkshops: state.bookedWorkshops.filter(b => b.workshopId !== action.payload),
       };
 
-    case Actions.SET_AUDIO:
-      return { ...state, audio: { ...state.audio, ...action.payload } };
-
-    case Actions.TOGGLE_AUDIO_EXPANDED:
-      return { ...state, audio: { ...state.audio, isExpanded: !state.audio.isExpanded } };
-
     case Actions.SHOW_NOTIFICATION:
       return { ...state, notification: action.payload };
 
@@ -147,14 +132,6 @@ export function AppProvider({ children }) {
     dispatch({ type: Actions.CANCEL_WORKSHOP, payload: workshopId });
   }, []);
 
-  const setAudio = useCallback((audioState) => {
-    dispatch({ type: Actions.SET_AUDIO, payload: audioState });
-  }, []);
-
-  const toggleAudioExpanded = useCallback(() => {
-    dispatch({ type: Actions.TOGGLE_AUDIO_EXPANDED });
-  }, []);
-
   const notify = useCallback((message, type = 'success') => {
     dispatch({ type: Actions.SHOW_NOTIFICATION, payload: { message, type } });
     setTimeout(() => dispatch({ type: Actions.CLEAR_NOTIFICATION }), 3500);
@@ -170,8 +147,7 @@ export function AppProvider({ children }) {
       reorderDays,
       bookWorkshop,
       cancelWorkshop,
-      setAudio,
-      toggleAudioExpanded,
+
       notify,
     }}>
       {children}

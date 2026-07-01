@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { AppProvider } from './context/AppContext';
 import MasterLayout from './components/MasterLayout';
 import Dashboard from './pages/Dashboard';
-import Planner from './pages/Planner';
-import Artisans from './pages/Artisans';
-import Calendar from './pages/Calendar';
-import Community from './pages/Community';
+import CraftDiscoveryView from './pages/CraftDiscoveryView';
+import TeaHeritageView from './pages/TeaHeritageView';
+import SanctuaryLedgerView from './pages/SanctuaryLedgerView';
+import FieldJournalPlanner from './pages/FieldJournalPlanner';
 
-// Page map — maps route id → component
+// Refactored Assam Guide route mapping tree
 const PAGES = {
   dashboard: Dashboard,
-  planner:   Planner,
-  artisans:  Artisans,
-  calendar:  Calendar,
-  community: Community,
+  fabric:    CraftDiscoveryView,
+  tea:       TeaHeritageView,
+  sanctuary: SanctuaryLedgerView,
+  planner:   FieldJournalPlanner,
 };
 
 export default function App() {

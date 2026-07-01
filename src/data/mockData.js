@@ -110,12 +110,7 @@ export const ecoPartnersData = [
   { id: 'p3', name: 'Sualkuchi Fair-Trade Loom Alliance', type: 'artisan', badges: [{ name: 'Ethical Wages', desc: 'Ensures weavers receive direct fair profit share, above middleman rates.' }, { name: 'Eco-Dyes Only', desc: 'Utilises organic, non-chemical herbal dyes for traditional silk weaving.' }], description: 'A cooperative ensuring full financial transparency and organic, non-chemical dyes for silk weaving.' },
 ];
 
-// ── Ambient Soundscape Tracks ─────────────────────────────────
-export const soundscapeTracks = [
-  { id: 't1', title: 'Brahmaputra River Dawn', desc: 'Morning river ambience & bird calls', icon: '🌊' },
-  { id: 't2', title: 'Rhythms of the Valley', desc: 'Pepa & Gogona folk instruments', icon: '🎵' },
-  { id: 't3', title: 'Rainforest Symphony', desc: 'Deep jungle rain & cicadas', icon: '🌿' },
-];
+
 
 // ── Mock API helpers ──────────────────────────────────────────
 
