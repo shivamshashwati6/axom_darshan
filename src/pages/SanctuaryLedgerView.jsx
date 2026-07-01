@@ -55,7 +55,7 @@ export default function SanctuaryLedgerView() {
     <div style={{ backgroundColor: 'var(--bone)', minHeight: '100%' }}>
       {/* Page Header */}
       <section
-        className="px-6 md:px-16 pt-16 pb-12"
+        className="px-4 md:px-16 pt-16 pb-12"
         style={{ borderBottom: '1px solid var(--indigo-12)' }}
       >
         <p className="muted-label mb-3">Wilderness Ledger</p>
@@ -68,7 +68,7 @@ export default function SanctuaryLedgerView() {
       <div className="geo-divider" />
 
       {/* Main Grid split */}
-      <div className="px-6 md:px-16 py-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-12">
+      <div className="px-4 md:px-16 py-16 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2.5fr] gap-12">
         {/* Left Side: Ledger List */}
         <aside style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--indigo-30)', marginBottom: '0.5rem' }}>
@@ -119,17 +119,17 @@ export default function SanctuaryLedgerView() {
             {selected.name}
           </h2>
 
-          {/* Metric row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
+          {/* Metric row - mobile snap carousel, desktop grid */}
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-6 w-full pb-4 md:grid md:grid-cols-3 md:pb-0 mb-8">
+            <div className="snap-center shrink-0 min-w-[85vw] md:min-w-0 md:w-full" style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
               <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--indigo-30)' }}>Ambient Temperature</span>
               <p style={{ fontFamily: "'Inter', monospace", fontSize: '1.5rem', fontWeight: 600, color: 'var(--indigo)', marginTop: '4px' }}>{selected.temp}</p>
             </div>
-            <div style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
+            <div className="snap-center shrink-0 min-w-[85vw] md:min-w-0 md:w-full" style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
               <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--indigo-30)' }}>Relative Humidity</span>
               <p style={{ fontFamily: "'Inter', monospace", fontSize: '1.5rem', fontWeight: 600, color: 'var(--indigo)', marginTop: '4px' }}>{selected.humidity}</p>
             </div>
-            <div style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
+            <div className="snap-center shrink-0 min-w-[85vw] md:min-w-0 md:w-full" style={{ backgroundColor: 'var(--bone)', border: '1px solid var(--indigo-12)', padding: '1rem' }}>
               <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--indigo-30)' }}>Animal Activity Index</span>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '1.25rem', fontWeight: 600, color: selected.color, marginTop: '8px' }}>{selected.activity.toUpperCase()}</p>
             </div>

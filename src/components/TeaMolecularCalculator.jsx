@@ -186,14 +186,16 @@ export default function TeaMolecularCalculator() {
               step="1"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+              className="touch-none"
               style={{
                 width: '100%',
                 cursor: 'pointer',
                 accentColor: 'var(--indigo)',
                 background: 'var(--indigo-12)',
-                height: '2px',
+                height: '24px', /* Larger touch target area */
                 borderRadius: '0',
                 outline: 'none',
+                padding: '10px 0', /* Expands the clickable height */
               }}
             />
             {/* Custom Scale ticks */}

@@ -67,88 +67,71 @@ export default function MasterLayout({ currentPage, onNavigate, children }) {
           ))}
         </nav>
 
-        {/* Right: status badges + mobile toggle */}
+        {/* Right: status badges */}
         <div className="flex items-center gap-3">
           {state.itinerary.length > 0 && (
             <button
               onClick={() => onNavigate('planner')}
-              className="hidden md:inline-flex tag-badge hover:border-[var(--indigo)] transition-colors"
+              className="inline-flex tag-badge hover:border-[var(--indigo)] transition-colors"
               style={{ cursor: 'pointer' }}
             >
-              {state.itinerary.length} days planned
+              {state.itinerary.length} planned
             </button>
           )}
           {state.bookedWorkshops.length > 0 && (
             <button
               onClick={() => onNavigate('artisans')}
-              className="hidden md:inline-flex tag-gold hover:opacity-80 transition-opacity"
+              className="inline-flex tag-gold hover:opacity-80 transition-opacity"
               style={{ cursor: 'pointer' }}
             >
               {state.bookedWorkshops.length} booked
             </button>
           )}
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden p-1"
-            onClick={() => setMobileOpen(v => !v)}
-            aria-label="Toggle menu"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--indigo)' }}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              {mobileOpen
-                ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              }
-            </svg>
-          </button>
         </div>
       </header>
 
-      {/* ── Geometric Divider Strip ───────────────────────── */}
-      {/* Rendered below navbar via the sticky offset; visible only on scroll */}
-
-      {/* ── Mobile Dropdown ───────────────────────────────── */}
-      {mobileOpen && (
-        <div
-          className="fixed top-[64px] inset-x-0 z-40 px-6 py-5 flex flex-col gap-1 md:hidden fade-in"
-          style={{
-            backgroundColor: 'var(--bone)',
-            borderBottom: '1px solid var(--indigo-12)',
-          }}
-        >
-          <div className="geo-divider mb-4" />
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => { onNavigate(item.id); setMobileOpen(false); }}
-              className="flex items-center justify-between px-3 py-3 text-left transition-colors"
-              style={{
-                background: currentPage === item.id ? 'var(--cream)' : 'transparent',
-                borderLeft: currentPage === item.id ? '2px solid var(--gold)' : '2px solid transparent',
-                color: 'var(--indigo)',
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '0.875rem',
-                fontWeight: currentPage === item.id ? 600 : 400,
-                letterSpacing: '0.04em',
-                border: 'none',
-                cursor: 'pointer',
-                width: '100%',
-              }}
-            >
-              {item.label}
-              {currentPage === item.id && (
-                <span style={{ color: 'var(--gold)', fontSize: '0.75rem' }}>◆</span>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* ── Page Content ──────────────────────────────────── */}
-      <main className="flex-1" style={{ paddingTop: '64px' }}>
+      <main className="flex-1 pb-16 md:pb-0" style={{ paddingTop: '64px' }}>
         {children}
       </main>
+
+      {/* ── Mobile Bottom Navigation Bar ────────────────── */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 flex items-center justify-around"
+        style={{
+          backgroundColor: 'var(--cream)',
+          borderTop: '1px solid var(--indigo)',
+        }}
+      >
+        {navItems.map(item => {
+          const isActive = currentPage === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: "'Inter', monospace, sans-serif",
+                fontSize: '10px',
+                fontWeight: isActive ? 700 : 400,
+                letterSpacing: '0.12em',
+                color: 'var(--indigo)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '3px',
+              }}
+            >
+              <span>{item.label.split(' ')[0]}</span>
+              {isActive && (
+                <span style={{ color: 'var(--gold)', fontSize: '8px' }}>◆</span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
 
       {/* ── Footer Geo Strip ──────────────────────────────── */}
       <footer
