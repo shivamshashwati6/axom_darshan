@@ -214,12 +214,12 @@ function NotificationToast() {
 
   return (
     <div
-      className="toast-animate fixed bottom-24 left-1/2 z-50 px-6 py-3 text-sm font-semibold shadow-md"
+      className="toast-animate fixed bottom-24 left-1/2 z-50 px-6 py-3 text-sm font-semibold shadow-none"
       style={{
         transform: 'translateX(-50%)',
         backgroundColor: 'var(--bone)',
         border: `1px solid ${s.borderColor}`,
-        borderRadius: '2px',
+        borderRadius: '0',
         color: s.color,
         fontFamily: "'Inter', sans-serif",
         letterSpacing: '0.04em',
